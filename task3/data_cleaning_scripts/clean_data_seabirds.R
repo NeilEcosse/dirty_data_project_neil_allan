@@ -30,4 +30,6 @@ bird_data_by_record_id <- read_excel("raw_data/seabirds.xls", sheet = "Bird data
 ship_data_codes <- read_excel("raw_data/seabirds.xls", sheet = "Ship data codes")
 bird_data_codes <- read_excel("raw_data/seabirds.xls", sheet = "Bird data codes")
 
-
+#check distinct names - note it has sex, age, plumage data as well as freetext for uncertain observatiosns
+#distinct_names <- bird_data_by_record_id %>% 
+#     distinct(bird_data_by_record_id$`Species common name (taxon [AGE / SEX / PLUMAGE PHASE])`)
