@@ -48,7 +48,7 @@ bird_data_codes_clean <-
 ship_data_codes_clean <-
   clean_names(ship_data_codes)
 
-#  drop pre-cleaning versions of tables
+#  drop pre-cleaning versions of ojbects
 rm("bird_data_by_record_id", "ship_data_by_record_id", "bird_data_codes", "ship_data_codes")
 
 # ship_data_by_record_id_clean - check that values for latitude and longitude are valid
@@ -123,6 +123,10 @@ write_csv(bird_data_by_record_id_clean,"clean_data/bird_data_by_record_id_clean.
 
 # ship_data_by_record_id_clean_clean - write output to a csv
 write_csv(ship_data_by_record_id_clean,"clean_data/ship_data_by_record_id_clean.csv")
+
+
+# drop data objects from environment
+rm(bird_data_by_record_id_clean, bird_data_codes_clean, ship_data_by_record_id_clean, ship_data_codes_clean)
 
 
 

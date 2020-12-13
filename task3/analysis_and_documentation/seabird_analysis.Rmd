@@ -13,7 +13,7 @@ library(dplyr)
 library(here)
 ```
 
-##1 -  import bird and ship data files created by **clean_data_seabirds.R**
+#1 -  import bird and ship data files created by **clean_data_seabirds.R**
 ```{r}
 
 bird_data_by_record_id_clean <-
@@ -24,4 +24,15 @@ read_csv(here("clean_data/ship_data_by_record_id_clean.csv"))
 ```
 
 
-#2 - analysis questions
+#2 - analysis questions set by CodeClan
+2.1 - Which bird had the most individual sightings?
+```{r}
+bird_data_by_record_id_clean %>% 
+group_by(species_common_name,
+         species_scientific_name,
+         species_abbreviation) %>%  
+summarise(total_count = sum(count)) %>% 
+arrange(desc(total_count)) 
+#slice_max(count, n = 1)
+```
+
