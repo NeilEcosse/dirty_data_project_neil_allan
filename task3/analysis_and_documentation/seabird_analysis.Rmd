@@ -25,7 +25,7 @@ read_csv(here("clean_data/ship_data_by_record_id_clean.csv"))
 
 
 #2 - analysis questions set by CodeClan
-2.1 - Which bird had the most individual sightings?
+2.1 - Which bird had the most individual sightings? (check this)
 ```{r}
 bird_data_by_record_id_clean %>% 
 group_by(species_common_name,
