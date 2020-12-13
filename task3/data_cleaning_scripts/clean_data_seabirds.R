@@ -30,6 +30,18 @@ bird_data_by_record_id <- read_excel("raw_data/seabirds.xls", sheet = "Bird data
 ship_data_codes <- read_excel("raw_data/seabirds.xls", sheet = "Ship data codes")
 bird_data_codes <- read_excel("raw_data/seabirds.xls", sheet = "Bird data codes")
 
-#check distinct names - note it has sex, age, plumage data as well as freetext for uncertain observatiosns
-#distinct_names <- bird_data_by_record_id %>% 
-#     distinct(bird_data_by_record_id$`Species common name (taxon [AGE / SEX / PLUMAGE PHASE])`)
+# clean bird_data_by_record_id column names with janitor
+bird_data_by_record_id_clean <-
+  clean_names(bird_data_by_record_id)
+
+# change column titles for common and scientific names
+bird_data_by_record_id_clean <-
+  bird_data_by_record_id_clean %>% 
+  rename("species_common_name" = "species_common_name_taxon_age_sex_plumage_phase") %>% 
+  rename("species_scientific_name" = "species_scientific_name_taxon_age_sex_plumage_phase")
+
+
+# remove strings relating to age, sex and plumage from species_common_name
+bird_data_by_record_id_clean <-
+  bird_data_by_record_id_clean %>% 
+  mutate(species_common_name = str_remove_all(species_common_name, " AD[MF]*| SUBAD[MF]*| IMM[MF]*| JUV[MF]*| PL[1-9][MF]*| DRK[MF]*| INT[MF]*| LGHT[MF]*| WHITE[MF]*"))
