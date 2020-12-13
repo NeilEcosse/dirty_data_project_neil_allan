@@ -39,8 +39,16 @@ bird_data_by_record_id_clean <-
 ship_data_by_record_id_clean <-
   clean_names(ship_data_by_record_id)
 
+# bird_data_codes - clean column names with janitor
+bird_data_codes_clean <-
+  clean_names(bird_data_codes)
 
+# ship_data_codes - clean column names with janitor
+ship_data_codes_clean <-
+  clean_names(ship_data_codes)
 
+#  drop pre-cleaning versions of tables
+rm("bird_data_by_record_id", "ship_data_by_record_id", "bird_data_codes", "ship_data_codes")
 
 # ship_data_by_record_id_clean - check that values for latitude and longitude are valid
 ship_data_by_record_id_clean  %>% 
@@ -91,10 +99,10 @@ bird_data_by_record_id_clean <-
 
 
 
-# bird_data_by_record_id - write output to a csv
+# bird_data_by_record_id_clean - write output to a csv
 write_csv(bird_data_by_record_id_clean,"clean_data/bird_data_by_record_id_clean.csv")
 
-# ship_data_by_record_id - write output to a csv
+# ship_data_by_record_id_clean - write output to a csv
 write_csv(ship_data_by_record_id_clean,"clean_data/ship_data_by_record_id_clean.csv")
 
 
