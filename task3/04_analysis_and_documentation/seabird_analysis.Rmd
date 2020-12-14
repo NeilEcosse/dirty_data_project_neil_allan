@@ -108,7 +108,9 @@ select(record_id,
          count,
          age,
          sact,
-        date) %>%
+        date,
+        lat,
+        long) %>%
         mutate(year = substring(date,1,4)) %>% 
          mutate(
            ship_activity = case_when(
@@ -141,4 +143,34 @@ data_by_year_and_ship_activity %>%
   pivot_wider(names_from = ship_activity, values_from = number_of_records)
 
 ```
+
+
+##3.2  - Records with very high counts
+These records may represent people recording genuinely high numbers with the largest number the system
+can cope with, but they would merit further investigation - could perhaps exclude records 
+of "99999" in the meantime:
+```{r}
+data_by_year_and_ship_activity %>% 
+  select(date, species_common_name, record_id, count) %>% 
+arrange(desc(count)) %>% 
+head(20)
+```
+
+
+## 3.3 - Number of Gannets recorded per year
+Just having a look at this to see if there was anything interesting.
+Mainly tells me I need to think about how many observations there were - 
+perhaps need to be careful when summarising counts by year.
+```{r}
+data_by_year_and_ship_activity %>%
+  filter(str_detect(species_common_name, "[gG]annet"),
+         ship_activity == "steaming, sailing") %>%
+  group_by(year) %>% 
+  summarise(total_count = sum(count),
+            number_of_observations = n(),
+            avg_number_of_individuals_per_observation = (sum(count)/n())
+            )
+```
+
+
 
