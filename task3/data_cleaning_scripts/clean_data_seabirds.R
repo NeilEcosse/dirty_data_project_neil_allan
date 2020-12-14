@@ -3,7 +3,7 @@ library(readxl)
 library(dplyr)
 library(janitor)
 library(assertr)
-library(here)
+
 
 
 # create a vector of expected sheet names in seabirds.xls
@@ -48,7 +48,7 @@ bird_data_codes_clean <-
 ship_data_codes_clean <-
   clean_names(ship_data_codes)
 
-#  drop pre-cleaning versions of ojbects
+#  drop pre-cleaning versions of objects
 rm("bird_data_by_record_id", "ship_data_by_record_id", "bird_data_codes", "ship_data_codes")
 
 # ship_data_by_record_id_clean - check that values for latitude and longitude are valid
@@ -70,11 +70,12 @@ bird_data_by_record_id_clean <-
 bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
   mutate(species_common_name = str_remove_all(species_common_name, 
-        " AD[MF]*| SUBAD[MF]*| IMM[MF]*| JUV[MF]*| PL[1-9][MF]*| DRK[MF]*| INT[MF]*| LGHT[MF]*| WHITE[MF]*"))
+        " M| F| AD[MF]*| SUBAD[MF]*| IMM[MF]*| JUV[MF]*| PL[1-9][MF]*| DRK[MF]*| INT[MF]*| LGHT[MF]*| LIGHT[MF]*| WHITE[MF]*"))
 # remove any leading or trailing spaces from species_common_name
 bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
   mutate(species_common_name = trimws(species_common_name, which = "both"))
+
 # bird_data_by_record_id_clean - remove brackets from species_common_name for "NO BIRDS..." records
 bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
@@ -87,7 +88,7 @@ bird_data_by_record_id_clean <-
 bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
   mutate(species_scientific_name = str_remove_all(species_scientific_name, 
-        " AD[MF]*| SUBAD[MF]*| IMM[MF]*| JUV[MF]*| PL[1-9][MF]*| DRK[MF]*| INT[MF]*| LGHT[MF]*| WHITE[MF]*"))
+        " M| F| AD[MF]*| SUBAD[MF]*| IMM[MF]*| JUV[MF]*| PL[1-9][MF]*| DRK[MF]*| INT[MF]*| LGHT[MF]*| LIGHT[MF]*| WHITE[MF]*"))
 # remove any leading or trailing spaces from species_scientific_name
 bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
@@ -97,7 +98,7 @@ bird_data_by_record_id_clean <-
 bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
   mutate(species_abbreviation = str_remove_all(species_abbreviation, 
-        " AD[MF]*| SUBAD[MF]*| IMM[MF]*| JUV[MF]*| PL[1-9][MF]*| DRK[MF]*| INT[MF]*| LGHT[MF]*| WHITE[MF]*"))
+        " M| F| AD[MF]*| SUBAD[MF]*| IMM[MF]*| JUV[MF]*| PL[1-9][MF]*| DRK[MF]*| INT[MF]*| LGHT[MF]*| LIGHT[MF]*| WHITE[MF]*"))
 # remove any leading or trailing spaces from species_abbreviation
 bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
@@ -118,17 +119,12 @@ bird_data_by_record_id_clean <-
     mutate(nfoll = if_else(is.na(nfoll),0,nfoll)) 
 
 
-# bird_data_by_record_id_clean_clean - write output to a csv
+# write output to csv files
 write_csv(bird_data_by_record_id_clean,"clean_data/bird_data_by_record_id_clean.csv")
-
-# ship_data_by_record_id_clean_clean - write output to a csv
 write_csv(ship_data_by_record_id_clean,"clean_data/ship_data_by_record_id_clean.csv")
+write_csv(bird_data_codes_clean,"clean_data/bird_data_codes_clean.csv")
+write_csv(ship_data_codes_clean,"clean_data/ship_data_codes_clean.csv")
 
 
 # drop data objects from environment
 rm(bird_data_by_record_id_clean, bird_data_codes_clean, ship_data_by_record_id_clean, ship_data_codes_clean)
-
-
-
-
-
