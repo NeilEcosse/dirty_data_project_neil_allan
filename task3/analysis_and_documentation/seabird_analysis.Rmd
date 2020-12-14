@@ -21,6 +21,12 @@ read_csv(here("clean_data/bird_data_by_record_id_clean.csv"))
 
 ship_data_by_record_id_clean <-
 read_csv(here("clean_data/ship_data_by_record_id_clean.csv"))
+
+bird_data_codes_clean <-
+read_csv(here("clean_data/bird_data_codes_clean.csv"))
+
+ship_data_codes_clean <-
+read_csv(here("clean_data/ship_data_codes_clean.csv"))
 ```
 
 
@@ -86,5 +92,49 @@ filter(str_detect(species_common_name, "[pP]enguin")) %>%
 #         species_abbreviation) %>% 
 summarise(total_number_penguins = sum(count)) #%>% 
 #arrange(desc(total_number_penguins)) 
+```
+
+```{r}
+names(ship_data_by_record_id_clean)
+```
+
+```{r}
+data_by_year_and_ship_activity  <-
+  bird_data_by_record_id_clean %>%
+  left_join(ship_data_by_record_id_clean, by = "record_id")  %>%
+select(record_id,
+        species_common_name,
+         species_scientific_name,
+         species_abbreviation,
+         count,
+         age,
+         sact,
+        date) %>%
+        mutate(year = substring(date,1,4)) %>% 
+         mutate(
+           ship_activity = case_when(
+             is.na(sact) ~ "Not recorded",
+             sact == 1 ~ "steaming, sailing",
+             sact == 2 ~ "dropping trash",
+             sact == 3 ~ "trawling",
+             sact == 4 ~ "oceanography",
+             sact == 5 ~ "potting",
+             sact == 6 ~ "line fishing",
+             sact == 7 ~ "cleaning fish",
+             sact == 8 ~ "stationary",
+             sact == 9 ~ "flying helicopters",
+             sact == 10 ~ "whaling",
+             TRUE       ~ "error - please check record"
+           )
+         ) 
+         
+
+        
+  
+```
+
+```{r}
+ship_data_by_record_id_clean %>% 
+  mutate(year = substring(ship_data_by_record_id_clean$date,1,4))
 ```
 

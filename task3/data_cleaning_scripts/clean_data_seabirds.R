@@ -76,13 +76,17 @@ bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
   mutate(species_common_name = trimws(species_common_name, which = "both"))
 
-# bird_data_by_record_id_clean - remove brackets from species_common_name for "NO BIRDS..." records
+
+
+# bird_data_by_record_id_clean - remove brackets from species_common_name for "NO BIRDS RECORDED" records
 bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
   mutate(species_common_name = str_remove_all(species_common_name,"\\["))
 bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
   mutate(species_common_name = str_remove_all(species_common_name,"\\]"))
+
+
 
 #  bird_data_by_record_id_clean - remove strings relating to age, sex and plumage from species_scientific_name
 bird_data_by_record_id_clean <-
@@ -93,6 +97,8 @@ bird_data_by_record_id_clean <-
 bird_data_by_record_id_clean <-
   bird_data_by_record_id_clean %>% 
   mutate(species_scientific_name = trimws(species_scientific_name, which = "both"))
+
+
 
 #  bird_data_by_record_id_clean - remove strings relating to age, sex and plumage from species_abbreviation
 bird_data_by_record_id_clean <-
