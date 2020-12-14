@@ -17,16 +17,16 @@ library(here)
 ```{r}
 
 bird_data_by_record_id_clean <-
-read_csv(here("clean_data/bird_data_by_record_id_clean.csv"))
+read_csv(here("03_clean_data/bird_data_by_record_id_clean.csv"))
 
 ship_data_by_record_id_clean <-
-read_csv(here("clean_data/ship_data_by_record_id_clean.csv"))
+read_csv(here("03_clean_data/ship_data_by_record_id_clean.csv"))
 
 bird_data_codes_clean <-
-read_csv(here("clean_data/bird_data_codes_clean.csv"))
+read_csv(here("03_clean_data/bird_data_codes_clean.csv"))
 
 ship_data_codes_clean <-
-read_csv(here("clean_data/ship_data_codes_clean.csv"))
+read_csv(here("03_clean_data/ship_data_codes_clean.csv"))
 ```
 
 
