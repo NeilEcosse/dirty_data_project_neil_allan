@@ -76,3 +76,15 @@ arrange(max_count) %>%
 filter(max_count == 1)
 ```
 
+
+##2.5 - How many penguins were seen? (Hint: there are many types of penguin)
+```{r}
+bird_data_by_record_id_clean %>%
+filter(str_detect(species_common_name, "[pP]enguin")) %>% 
+#group_by(species_common_name, 
+#         species_scientific_name,
+#         species_abbreviation) %>% 
+summarise(total_number_penguins = sum(count)) #%>% 
+#arrange(desc(total_number_penguins)) 
+```
+
