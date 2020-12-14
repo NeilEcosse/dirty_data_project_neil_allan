@@ -94,10 +94,9 @@ summarise(total_number_penguins = sum(count)) #%>%
 #arrange(desc(total_number_penguins)) 
 ```
 
-```{r}
-names(ship_data_by_record_id_clean)
-```
 
+#3 - Other analysis
+##3.1.1 - overview by year and ship activity - get data
 ```{r}
 data_by_year_and_ship_activity  <-
   bird_data_by_record_id_clean %>%
@@ -133,8 +132,13 @@ select(record_id,
   
 ```
 
+
+##3.1.2 - overview by year and ship activity - view summary
 ```{r}
-ship_data_by_record_id_clean %>% 
-  mutate(year = substring(ship_data_by_record_id_clean$date,1,4))
+data_by_year_and_ship_activity %>% 
+  group_by(year, ship_activity) %>% 
+  summarise(number_of_records = n()) %>%
+  pivot_wider(names_from = ship_activity, values_from = number_of_records)
+
 ```
 
