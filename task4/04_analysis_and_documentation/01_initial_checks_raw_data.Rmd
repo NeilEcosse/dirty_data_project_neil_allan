@@ -1,0 +1,110 @@
+---
+title: "Dirty data project task 4 - halloween candy data"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Initial thoughts on raw data
+
+## Notes after first view of data:
+
+Things to think about when I create a cleaning script:
+
+* each file has a different number of columns
+
+* country &  state: NOT in  2015
+
+* gender: NOT in 2015
+
+* age: present in all 3 files
+
+* whether going out for halloween: present in all 3 files
+
+* ? how to check if the list of candy bars is in the same order in all files
+
+  * e.g. first bar "butterfinger" is in 2015 but not the others
+  
+* will need to pivot_longer the candy bars once I'm sure of order and have standardised the column names
+
+* general structure:
+
+  * 2015: date, age, going out?, then 121 candy columns
+  * 2016: date, going out?, gender, age, country, state, then 117 candy columns
+  * 2017: ID, going out?, gender, age, country, state, then 114 candy columns
+  
+* will look into data quality once I've worked out how to get the three files into a useful structure
+
+*  might need a look-up table or similar to try and standardise country and state names
+
+* age in different formats in different files
+
+* invalid ages recorded in 2015
+
+* ???what the heck are the "degrees of separation from Beyonce" type columns in 2015
+
+
+## Conclusions before I start to write cleaning files:
+
+* Write code to sort out structure using pivot_longer first - come back and look at data quality afterwards
+
+* Maybe the column heading are not as horrible as they look - once I pivot_longer and get rid of brackets and extra characters, might not be too bad, from looking at them they seem like they might be relatively consistent between years (though I fully expect to discover more problems later!)
+
+* I could hard code the column names for data, age etc columns - the code is going to be very specific for each year, not something that needs to be repeatable for all years
+
+* Probably best to have a separate script for each file - could get confusing if not
+
+* need to add a unique id before pivot
+
+
+
+```{r}
+library(here)
+library(readxl)
+library(tidyverse)
+library(dplyr)
+```
+
+
+```{r}
+excel_sheets(here("01_raw_data/boing-boing-candy-2015.xlsx"))
+```
+
+# Read data
+```{r}
+twenty_fifteen <-
+  read_excel(here("01_raw_data/boing-boing-candy-2015.xlsx"))
+```
+
+```{r}
+twenty_sixteen <-
+  read_excel(here("01_raw_data/boing-boing-candy-2016.xlsx"))
+```
+
+```{r}
+twenty_seventeen <-
+  read_excel(here("01_raw_data/boing-boing-candy-2017.xlsx"))
+```
+
+
+
+# Test - pivot_longer 2015
+```{r}
+twenty_fifteen_reduced <-
+twenty_fifteen %>% 
+  select("Timestamp":"[York Peppermint Patties]" ) %>% 
+  mutate(unique_id = paste(Timestamp, `How old are you?`, `Are you going actually going trick or treating yourself?`, sep = "_" ))
+
+names(twenty_fifteen_reduced)
+
+twenty_fifteen_long <- 
+  twenty_fifteen_reduced %>% 
+pivot_longer(cols = "[Butterfinger]":"[York Peppermint Patties]",
+             names_to = "candy_name",
+             values_to = "values",)
+```
+
+```{r}
+names(twenty_fifteen)
+```
+

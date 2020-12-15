@@ -183,7 +183,7 @@ data_by_year_and_ship_activity %>%
 
 * Perhaps the real issue is that the system used was not capable of recording full data in some situations - I wonder if this was a technical limitation at the time, or if the person who created it assumed you'd never need to record more than 100k in the count column?
 
-* It would be  interesting to compare these high numbers to known locations of colonies: as shown in **section 3.2.2 below**, the high counts for the Short-tailed shearwater are focused in specific areas;  if these correspond with known colonies, it would reassure me that the data is correct (and make me wonder what the real number of individuals was!)
+* It would be  interesting to compare these high numbers to known locations of colonies: as shown in **section 3.2.2 below**, the high counts for the Short-tailed shearwater are focused in specific areas;  if these correspond with known colonies, it would reassure me that the numbers are correct (and make me wonder what the true number of individuals was!)
 
 ```{r}
 data_by_year_and_ship_activity %>% 
