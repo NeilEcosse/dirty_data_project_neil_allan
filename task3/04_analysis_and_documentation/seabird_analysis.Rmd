@@ -79,7 +79,7 @@ bird_data_by_record_id_clean %>%
   
 ```
 
-## 2.4 - How many different types of birds were only ever seen in groups of 1
+## 2.4 - How many different types of birds were only ever seen in groups of 1?
 Twenty-three types, but please note my data cleaning assumptions: some of these species names, such as *Frigatebird (unidentified)*, are only in groups of one because the species wasn't clearly identified by the observer, and I am not making any changes to the data to try to recode this.
 ```{r}
 bird_data_by_record_id_clean %>% 
@@ -113,14 +113,15 @@ data_by_year_and_ship_activity  <-
   left_join(ship_data_by_record_id_clean, by = "record_id")  %>%
 select(record_id,
         species_common_name,
-         species_scientific_name,
-         species_abbreviation,
-         count,
-         age,
-         sact,
+        species_scientific_name,
+        species_abbreviation,
+        count,
+        age,
+        sact,
         date,
         lat,
-        long) %>%
+        long,
+        seasn) %>%
         mutate(year = substring(date,1,4)) %>% 
          mutate(
            ship_activity = case_when(
@@ -145,8 +146,8 @@ select(record_id,
 ```
 
 
-## 3.1.2 - overview by year and ship activity - view summary
-I've produced this table to give myself a quick overview of:
+## 3.1.2 - overview by year and ship activity - analysis
+I've added in codes from  **ship_data_codes_clean** to give myself a quick overview of:
 
 * which years have data
 
@@ -161,7 +162,7 @@ Probably the most useful insights for me at this stage are that:
 
 * The number of observations can vary greatly from year to year
 
-* The last couple of years of the data seem particularly low on observations (see *steaming, sailing* records for 1988-90); makes me wonder if recording "petered out" 
+* The last couple of years of the data seem particularly low on observations (see *steaming, sailing* records for 1988-90); makes me wonder if recording "petered out" or was replaced by something else
 
 ```{r}
 data_by_year_and_ship_activity %>% 
@@ -174,26 +175,39 @@ data_by_year_and_ship_activity %>%
 
 ## 3.2.1  - Records with very high counts
 
-* These records may represent people recording genuinely high numbers, but they would merit further investigation - someone recording the maximum number the system can cope with makes me suspicious.
+* These records may represent people recording genuinely high numbers, but they merit further investigation - someone recording the maximum number the system can cope with makes me suspicious.
 
 *  The table **bird_data_codes_clean** states that 99,999 (the largest number it's possible to record for *count*) should be used for sightings of over 100,000 individuals, so it's possible, but I'd want to be sure before quoting this anywhere. 
 
-* A quick Google search tells me that the Short-tailed shearwater is, for example,  the Australia's most numerous seabird, and that breeding colonies can contain an astonishing 16 million adults, so maybe I should stop being so data-skeptic and just enjoy the wonder of it!
+* A quick Google search tells me that the Short-tailed shearwater is, for example, Australia's most numerous seabird, and that breeding colonies can contain millions of adults, so maybe I should stop being so data-skeptic and just enjoy the wonder of it!
 
-* It would be  interesting to compare these high numbers to known locations of colonies: as shown in **3.2.2 below**, the high counts for the Short-tailed shearwater are focused in specific areas;  if these correspond with known colonies, it would reassure me that the data is correct (and make me wonder what the real number of individuals was!)
+* Perhaps the real issue is that the system used was not capable of recording full data in some situations - I wonder if this was a technical limitation at the time, or if the person who created it assumed you'd never need to record more than 100k in the count column?
+
+* It would be  interesting to compare these high numbers to known locations of colonies: as shown in **section 3.2.2 below**, the high counts for the Short-tailed shearwater are focused in specific areas;  if these correspond with known colonies, it would reassure me that the data is correct (and make me wonder what the real number of individuals was!)
+
 ```{r}
 data_by_year_and_ship_activity %>% 
   select(date, species_common_name, record_id, count) %>% 
 arrange(desc(count)) %>% 
 head(20)
 ```
-## 3.2.2 - Records for Short-tailed shearwater where count is 99,999 shown by year and location
+## 3.2.2 - Records for Short-tailed shearwater where count is 99,999 shown by year, season and location
+
+* The fact that all observations were made in spring or summer might support the idea that these were genuine records - large numbers congregate in colonies  during the breeding season
+
+* Searching for the coordinates on Google maps gives some further evidence to support these high counts:
+
+  * -38.00000, 1450000 is Melbourne - there is a colony of more than a million nearby: https://www.visitmelbourne.com/Regions/Phillip-Island/Things-to-do/Nature-and-wildlife/Wildlife-viewing/Bird-life
+
+  * -41.83333, 148.6167 is off the coast of Tasmania - Tasmania has an estimated 209 colonies with 11.4 million burrows! https://dpipwe.tas.gov.au/wildlife-management/fauna-of-tasmania/birds/complete-list-of-tasmanian-birds/short-tailed-shearwater
+
 ```{r}
 data_by_year_and_ship_activity %>%
   filter(species_common_name == "Short-tailed shearwater",
          count == 99999) %>% 
   select(species_common_name,
          year,
+         seasn,
          lat,
          long,
          count) %>% 
@@ -202,14 +216,20 @@ data_by_year_and_ship_activity %>%
 ```
 
 
+
+
 ## 3.3 - Number of Gannets recorded per year
 Just having a look at this to see if there was anything interesting.
-As with 3.2 above, it tells me I need to think about the number of observations there were - 
+As with **section 3.1 above**, it tells me I need to think about the number of observations there were - 
 and perhaps to be careful when summarising counts by year, or comparing years.
 
-Dividing the total count by the number of observations doesn't give any meaningful insights (you could be comparing a sighting of one individual passing through to an observation of a large group feeding), but I was just using as a crude starting point to think about how I could provide a data series over time
+Dividing the total count by the number of observations doesn't give any meaningful insights (you could be comparing a sighting of one individual passing through to an observation of a large group feeding), but I was just using it as a crude starting point to think about how I could provide a data series over time
 
-e.g. perhaps to look only at observations where the count was above a certain threshold, where at least a certain number of observations were available in the year, for a species or location where the group size might tell us something (e.g. number at a breeding site over time). 
+e.g. perhaps to look only at observations:
+
+* where the count was above a certain threshold
+* where at least a certain number of observations were available in the year
+* for a species or location where the group size might tell us something useful (e.g. number at a breeding site over time). 
 ```{r}
 data_by_year_and_ship_activity %>%
   filter(str_detect(species_common_name, "[gG]annet"),
@@ -224,8 +244,8 @@ data_by_year_and_ship_activity %>%
 
 ## 3.4 - other thoughts on how I could investigate the data
 
-* Species name: the data uses names based on a New Zealand checklist, so I considered using the list at the link below to check/standardise species names, or perhaps to view the bird data by family or conservation status. I decided not so I didn't get distracted from the main tasks, but this might be interesting to come back to later.  https://avibase.bsc-eoc.org/checklist.jsp?region=NZ
+* Species name: according to the table **bird_data_codes_clean**, the data uses names based on a New Zealand checklist, so I considered using the list at the link below to check/standardise species names, or perhaps to view the bird data by family or conservation status. I decided not to, so I didn't get distracted from the main tasks, but this might be interesting to come back to later.  https://avibase.bsc-eoc.org/checklist.jsp?region=NZ
 
-* I'd be interested to come back to this data once I've learned a bit more about data visualisation techniques: it's difficult to gain any insights from just looking at the coordinates in the data, and using a mapping tool create a heat map would help me visualise this - for example, comparing the information on Gannets in section 3.3 above with some of the known locations of Gannet colonies: https://teara.govt.nz/en/map/5819/new-zealands-main-gannet-colonies
+* I'd be interested to come back to this data once I've learned a bit more about data visualisation techniques: it's difficult to gain any insights from just looking at the coordinates in the data, and using a mapping tool create a heat map would help me visualise this. I could also bring in other data sources - for example, comparing the information on Gannets in section 3.3 above with some of the known locations of Gannet colonies: https://teara.govt.nz/en/map/5819/new-zealands-main-gannet-colonies
 
 

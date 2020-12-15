@@ -1817,7 +1817,7 @@ head(1)</code></pre>
 </div>
 </div>
 <div id="how-many-different-types-of-birds-were-only-ever-seen-in-groups-of-1" class="section level2">
-<h2>2.4 - How many different types of birds were only ever seen in groups of 1</h2>
+<h2>2.4 - How many different types of birds were only ever seen in groups of 1?</h2>
 <p>Twenty-three types, but please note my data cleaning assumptions: some of these species names, such as <em>Frigatebird (unidentified)</em>, are only in groups of one because the species wasn’t clearly identified by the observer, and I am not making any changes to the data to try to recode this.</p>
 <pre class="r"><code>bird_data_by_record_id_clean %&gt;% 
 group_by(species_common_name, 
@@ -1859,14 +1859,15 @@ summarise(total_number_penguins = sum(count)) #%&gt;% </code></pre>
   left_join(ship_data_by_record_id_clean, by = &quot;record_id&quot;)  %&gt;%
 select(record_id,
         species_common_name,
-         species_scientific_name,
-         species_abbreviation,
-         count,
-         age,
-         sact,
+        species_scientific_name,
+        species_abbreviation,
+        count,
+        age,
+        sact,
         date,
         lat,
-        long) %&gt;%
+        long,
+        seasn) %&gt;%
         mutate(year = substring(date,1,4)) %&gt;% 
          mutate(
            ship_activity = case_when(
@@ -1885,9 +1886,9 @@ select(record_id,
            )
          ) </code></pre>
 </div>
-<div id="overview-by-year-and-ship-activity---view-summary" class="section level2">
-<h2>3.1.2 - overview by year and ship activity - view summary</h2>
-<p>I’ve produced this table to give myself a quick overview of:</p>
+<div id="overview-by-year-and-ship-activity---analysis" class="section level2">
+<h2>3.1.2 - overview by year and ship activity - analysis</h2>
+<p>I’ve added in codes from <strong>ship_data_codes_clean</strong> to give myself a quick overview of:</p>
 <ul>
 <li><p>which years have data</p></li>
 <li><p>whether the number of observations per year is consistent</p></li>
@@ -1897,7 +1898,7 @@ select(record_id,
 <ul>
 <li><p>Not all years have observations (earliest is 1969, latest 1990, nothing for 1970-74)</p></li>
 <li><p>The number of observations can vary greatly from year to year</p></li>
-<li><p>The last couple of years of the data seem particularly low on observations (see <em>steaming, sailing</em> records for 1988-90); makes me wonder if recording “petered out”</p></li>
+<li><p>The last couple of years of the data seem particularly low on observations (see <em>steaming, sailing</em> records for 1988-90); makes me wonder if recording “petered out” or was replaced by something else</p></li>
 </ul>
 <pre class="r"><code>data_by_year_and_ship_activity %&gt;% 
   group_by(year, ship_activity) %&gt;% 
@@ -1913,10 +1914,11 @@ select(record_id,
 <div id="records-with-very-high-counts" class="section level2">
 <h2>3.2.1 - Records with very high counts</h2>
 <ul>
-<li><p>These records may represent people recording genuinely high numbers, but they would merit further investigation - someone recording the maximum number the system can cope with makes me suspicious.</p></li>
+<li><p>These records may represent people recording genuinely high numbers, but they merit further investigation - someone recording the maximum number the system can cope with makes me suspicious.</p></li>
 <li><p>The table <strong>bird_data_codes_clean</strong> states that 99,999 (the largest number it’s possible to record for <em>count</em>) should be used for sightings of over 100,000 individuals, so it’s possible, but I’d want to be sure before quoting this anywhere.</p></li>
-<li><p>A quick Google search tells me that the Short-tailed shearwater is, for example, the Australia’s most numerous seabird, and that breeding colonies can contain an astonishing 16 million adults, so maybe I should stop being so data-skeptic and just enjoy the wonder of it!</p></li>
-<li><p>It would be interesting to compare these high numbers to known locations of colonies: as shown in <strong>3.2.2 below</strong>, the high counts for the Short-tailed shearwater are focused in specific areas; if these correspond with known colonies, it would reassure me that the data is correct (and make me wonder what the real number of individuals was!)</p></li>
+<li><p>A quick Google search tells me that the Short-tailed shearwater is, for example, Australia’s most numerous seabird, and that breeding colonies can contain millions of adults, so maybe I should stop being so data-skeptic and just enjoy the wonder of it!</p></li>
+<li><p>Perhaps the real issue is that the system used was not capable of recording full data in some situations - I wonder if this was a technical limitation at the time, or if the person who created it assumed you’d never need to record more than 100k in the count column?</p></li>
+<li><p>It would be interesting to compare these high numbers to known locations of colonies: as shown in <strong>section 3.2.2 below</strong>, the high counts for the Short-tailed shearwater are focused in specific areas; if these correspond with known colonies, it would reassure me that the data is correct (and make me wonder what the real number of individuals was!)</p></li>
 </ul>
 <pre class="r"><code>data_by_year_and_ship_activity %&gt;% 
   select(date, species_common_name, record_id, count) %&gt;% 
@@ -1928,13 +1930,22 @@ head(20)</code></pre>
   </script>
 </div>
 </div>
-<div id="records-for-short-tailed-shearwater-where-count-is-99999-shown-by-year-and-location" class="section level2">
-<h2>3.2.2 - Records for Short-tailed shearwater where count is 99,999 shown by year and location</h2>
+<div id="records-for-short-tailed-shearwater-where-count-is-99999-shown-by-year-season-and-location" class="section level2">
+<h2>3.2.2 - Records for Short-tailed shearwater where count is 99,999 shown by year, season and location</h2>
+<ul>
+<li><p>The fact that all observations were made in spring or summer might support the idea that these were genuine records - large numbers congregate in colonies during the breeding season</p></li>
+<li><p>Searching for the coordinates on Google maps gives some further evidence to support these high counts:</p>
+<ul>
+<li><p>-38.00000, 1450000 is Melbourne - there is a colony of more than a million nearby: <a href="https://www.visitmelbourne.com/Regions/Phillip-Island/Things-to-do/Nature-and-wildlife/Wildlife-viewing/Bird-life" class="uri">https://www.visitmelbourne.com/Regions/Phillip-Island/Things-to-do/Nature-and-wildlife/Wildlife-viewing/Bird-life</a></p></li>
+<li><p>-41.83333, 148.6167 is off the coast of Tasmania - Tasmania has an estimated 209 colonies with 11.4 million burrows! <a href="https://dpipwe.tas.gov.au/wildlife-management/fauna-of-tasmania/birds/complete-list-of-tasmanian-birds/short-tailed-shearwater" class="uri">https://dpipwe.tas.gov.au/wildlife-management/fauna-of-tasmania/birds/complete-list-of-tasmanian-birds/short-tailed-shearwater</a></p></li>
+</ul></li>
+</ul>
 <pre class="r"><code>data_by_year_and_ship_activity %&gt;%
   filter(species_common_name == &quot;Short-tailed shearwater&quot;,
          count == 99999) %&gt;% 
   select(species_common_name,
          year,
+         seasn,
          lat,
          long,
          count) %&gt;% 
@@ -1942,15 +1953,20 @@ head(20)</code></pre>
           long)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["species_common_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["year"],"name":[2],"type":["chr"],"align":["left"]},{"label":["lat"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["long"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["count"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"Short-tailed shearwater","2":"1978","3":"-41.83333","4":"148.6167","5":"99999"},{"1":"Short-tailed shearwater","2":"1978","3":"-41.58333","4":"148.8000","5":"99999"},{"1":"Short-tailed shearwater","2":"1986","3":"-38.00000","4":"141.0000","5":"99999"},{"1":"Short-tailed shearwater","2":"1978","3":"-38.00000","4":"143.0000","5":"99999"},{"1":"Short-tailed shearwater","2":"1976","3":"-38.00000","4":"145.0000","5":"99999"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["species_common_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["year"],"name":[2],"type":["chr"],"align":["left"]},{"label":["seasn"],"name":[3],"type":["chr"],"align":["left"]},{"label":["lat"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["long"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["count"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"Short-tailed shearwater","2":"1978","3":"summer","4":"-41.83333","5":"148.6167","6":"99999"},{"1":"Short-tailed shearwater","2":"1978","3":"summer","4":"-41.58333","5":"148.8000","6":"99999"},{"1":"Short-tailed shearwater","2":"1986","3":"spring","4":"-38.00000","5":"141.0000","6":"99999"},{"1":"Short-tailed shearwater","2":"1978","3":"spring","4":"-38.00000","5":"143.0000","6":"99999"},{"1":"Short-tailed shearwater","2":"1976","3":"spring","4":"-38.00000","5":"145.0000","6":"99999"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 <div id="number-of-gannets-recorded-per-year" class="section level2">
 <h2>3.3 - Number of Gannets recorded per year</h2>
-<p>Just having a look at this to see if there was anything interesting. As with 3.2 above, it tells me I need to think about the number of observations there were - and perhaps to be careful when summarising counts by year, or comparing years.</p>
-<p>Dividing the total count by the number of observations doesn’t give any meaningful insights (you could be comparing a sighting of one individual passing through to an observation of a large group feeding), but I was just using as a crude starting point to think about how I could provide a data series over time</p>
-<p>e.g. perhaps to look only at observations where the count was above a certain threshold, where at least a certain number of observations were available in the year, for a species or location where the group size might tell us something (e.g. number at a breeding site over time).</p>
+<p>Just having a look at this to see if there was anything interesting. As with <strong>section 3.1 above</strong>, it tells me I need to think about the number of observations there were - and perhaps to be careful when summarising counts by year, or comparing years.</p>
+<p>Dividing the total count by the number of observations doesn’t give any meaningful insights (you could be comparing a sighting of one individual passing through to an observation of a large group feeding), but I was just using it as a crude starting point to think about how I could provide a data series over time</p>
+<p>e.g. perhaps to look only at observations:</p>
+<ul>
+<li>where the count was above a certain threshold</li>
+<li>where at least a certain number of observations were available in the year</li>
+<li>for a species or location where the group size might tell us something useful (e.g. number at a breeding site over time).</li>
+</ul>
 <pre class="r"><code>data_by_year_and_ship_activity %&gt;%
   filter(str_detect(species_common_name, &quot;[gG]annet&quot;),
          ship_activity == &quot;steaming, sailing&quot;) %&gt;%
@@ -1969,7 +1985,7 @@ head(20)</code></pre>
 <div id="other-thoughts-on-how-i-could-investigate-the-data" class="section level2">
 <h2>3.4 - other thoughts on how I could investigate the data</h2>
 <ul>
-<li><p>Species name: the data uses names based on a New Zealand checklist, so I considered using the list at the link below to check/standardise species names, or perhaps to view the bird data by family or conservation status. I decided not so I didn’t get distracted from the main tasks, but this might be interesting to come back to later. <a href="https://avibase.bsc-eoc.org/checklist.jsp?region=NZ" class="uri">https://avibase.bsc-eoc.org/checklist.jsp?region=NZ</a></p></li>
+<li><p>Species name: the data uses names based on a New Zealand checklist, so I considered using the list at the link below to check/standardise species names, or perhaps to view the bird data by family or conservation status. I decided not to, so I didn’t get distracted from the main tasks, but this might be interesting to come back to later. <a href="https://avibase.bsc-eoc.org/checklist.jsp?region=NZ" class="uri">https://avibase.bsc-eoc.org/checklist.jsp?region=NZ</a></p></li>
 <li><p>I’d be interested to come back to this data once I’ve learned a bit more about data visualisation techniques: it’s difficult to gain any insights from just looking at the coordinates in the data, and using a mapping tool create a heat map would help me visualise this - for example, comparing the information on Gannets in section 3.3 above with some of the known locations of Gannet colonies: <a href="https://teara.govt.nz/en/map/5819/new-zealands-main-gannet-colonies" class="uri">https://teara.govt.nz/en/map/5819/new-zealands-main-gannet-colonies</a></p></li>
 </ul>
 </div>

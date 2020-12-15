@@ -33,6 +33,8 @@ This contains a file called **clean_data_seabirds.R**
 
 * I have retained observations where the count of birds is NA, and updated count to zero - I don't want to remove or ignore these rows at this stage, as they could be useful (e.g. not seeing any birds in a place you might expect to could in itself  be a useful observation).
 
+
+
 ### Details of the cleaning file  *clean_data_seabirds.R*
 
 * Checks if the Excel file  **seabirds.xls**  contains the expected worksheets, as detailed in *01_raw_data* above.
