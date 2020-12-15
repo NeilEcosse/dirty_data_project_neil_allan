@@ -1685,6 +1685,7 @@ summary {
 </div>
 
 
+<p>This file answers the questions set by CodeClan, and contains some of my own investigations of the data.</p>
 <pre class="r"><code>library(readxl)
 library(tidyverse)</code></pre>
 <pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
@@ -1704,9 +1705,10 @@ library(tidyverse)</code></pre>
 <pre class="r"><code>library(dplyr)
 library(here)</code></pre>
 <pre><code>## here() starts at /Users/user/dirty_data_project_neil_allan/task3</code></pre>
-<p>##1 - import bird and ship data files created by <strong>clean_data_seabirds.R</strong></p>
+<div id="import-csv-files-created-by-clean_data_seabirds.r" class="section level1">
+<h1>1 - Import csv files created by <em>clean_data_seabirds.R</em></h1>
 <pre class="r"><code>bird_data_by_record_id_clean &lt;-
-read_csv(here(&quot;clean_data/bird_data_by_record_id_clean.csv&quot;))</code></pre>
+read_csv(here(&quot;03_clean_data/bird_data_by_record_id_clean.csv&quot;))</code></pre>
 <pre><code>## 
 ## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
@@ -1725,7 +1727,7 @@ read_csv(here(&quot;clean_data/bird_data_by_record_id_clean.csv&quot;))</code></
 ## )
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
 <pre class="r"><code>ship_data_by_record_id_clean &lt;-
-read_csv(here(&quot;clean_data/ship_data_by_record_id_clean.csv&quot;))</code></pre>
+read_csv(here(&quot;03_clean_data/ship_data_by_record_id_clean.csv&quot;))</code></pre>
 <pre><code>## 
 ## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
@@ -1740,7 +1742,238 @@ read_csv(here(&quot;clean_data/ship_data_by_record_id_clean.csv&quot;))</code></
 ##   seasn = col_character()
 ## )
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
-<p>#2 - analysis questions</p>
+<pre class="r"><code>bird_data_codes_clean &lt;-
+read_csv(here(&quot;03_clean_data/bird_data_codes_clean.csv&quot;))</code></pre>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   bird_data_fields = col_character(),
+##   x2 = col_character(),
+##   x3 = col_character()
+## )</code></pre>
+<pre class="r"><code>ship_data_codes_clean &lt;-
+read_csv(here(&quot;03_clean_data/ship_data_codes_clean.csv&quot;))</code></pre>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   ship_data_fields = col_character(),
+##   x2 = col_character(),
+##   x3 = col_character()
+## )</code></pre>
+</div>
+<div id="analysis-questions-set-by-codeclan" class="section level1">
+<h1>2 - Analysis questions set by CodeClan</h1>
+<div id="which-bird-had-the-most-individual-sightings" class="section level2">
+<h2>2.1 - Which bird had the most individual sightings?</h2>
+<p>Note that the answer, Wandering albatross <em>sensu lato</em>, is an example of a record where species has not been recorded at a definitive level (you will see further examples if you expand the <em>head</em> to 10 rows in the query below). As described in the README file for this task, I have not attempted to clean or transform records of this type.</p>
+<pre class="r"><code>bird_data_by_record_id_clean %&gt;%
+group_by(species_common_name, 
+         species_scientific_name,
+         species_abbreviation) %&gt;% 
+summarise(total_sightings = n()) %&gt;% 
+arrange(desc(total_sightings)) %&gt;% 
+head(1)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;species_common_name&#39;, &#39;species_scientific_name&#39; (override with `.groups` argument)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["species_common_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["species_scientific_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["species_abbreviation"],"name":[3],"type":["chr"],"align":["left"]},{"label":["total_sightings"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"Wandering albatross sensu lato","2":"Diomedea antipodensis / exulans","3":"DIOANTEXU","4":"11293"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="which-bird-had-the-highest-total-count" class="section level2">
+<h2>2.2 - Which bird had the highest total count?</h2>
+<p>The Short-tailed shearwater. The data contains some very high counts for this bird - see section 3.2 below for further investigation.</p>
+<pre class="r"><code>bird_data_by_record_id_clean %&gt;%
+group_by(species_common_name, 
+         species_scientific_name,
+         species_abbreviation) %&gt;% 
+summarise(total_count = sum(count)) %&gt;% 
+arrange(desc(total_count)) %&gt;% 
+head(1)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;species_common_name&#39;, &#39;species_scientific_name&#39; (override with `.groups` argument)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["species_common_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["species_scientific_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["species_abbreviation"],"name":[3],"type":["chr"],"align":["left"]},{"label":["total_count"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Short-tailed shearwater","2":"Puffinus tenuirostris","3":"PUFTEN","4":"982553"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="which-bird-had-the-highest-total-count-above-a-latitude-of--30" class="section level2">
+<h2>2.3 - Which bird had the highest total count above a latitude of -30?</h2>
+<p>The Wedge-tailed shearwater:</p>
+<pre class="r"><code>bird_data_by_record_id_clean %&gt;%
+  left_join(ship_data_by_record_id_clean, by = &quot;record_id&quot;) %&gt;% 
+  filter(lat &gt; -30) %&gt;% 
+  group_by(species_common_name, 
+         species_scientific_name,
+         species_abbreviation) %&gt;% 
+  summarise(total_count = sum(count)) %&gt;% 
+  arrange(desc(total_count)) %&gt;% 
+  head(1)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;species_common_name&#39;, &#39;species_scientific_name&#39; (override with `.groups` argument)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["species_common_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["species_scientific_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["species_abbreviation"],"name":[3],"type":["chr"],"align":["left"]},{"label":["total_count"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Wedge-tailed shearwater","2":"Puffinus pacificus","3":"PUFPAC","4":"855"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="how-many-different-types-of-birds-were-only-ever-seen-in-groups-of-1" class="section level2">
+<h2>2.4 - How many different types of birds were only ever seen in groups of 1</h2>
+<p>Twenty-three types, but please note my data cleaning assumptions: some of these species names, such as <em>Frigatebird (unidentified)</em>, are only in groups of one because the species wasn’t clearly identified by the observer, and I am not making any changes to the data to try to recode this.</p>
+<pre class="r"><code>bird_data_by_record_id_clean %&gt;% 
+group_by(species_common_name, 
+         species_scientific_name,
+         species_abbreviation) %&gt;%  
+summarise(max_count = max(count)) %&gt;% 
+arrange(max_count) %&gt;% 
+filter(max_count == 1)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;species_common_name&#39;, &#39;species_scientific_name&#39; (override with `.groups` argument)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["species_common_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["species_scientific_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["species_abbreviation"],"name":[3],"type":["chr"],"align":["left"]},{"label":["max_count"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Atlantic yellow-nosed mollymawk","2":"Thalassarche chlororhynchos","3":"THACHL","4":"1"},{"1":"Audubon's shearwater","2":"Puffinus lherminieri","3":"PUFLHE","4":"1"},{"1":"Barau's petrel","2":"Pterodroma baraui","3":"PTEBAR","4":"1"},{"1":"Black / Westland petrel","2":"Procellaria parkinsoni / westlandica","3":"PROPARWES","4":"1"},{"1":"Black-faced cormorant","2":"Phalacrocorax fuscescens","3":"PHAFUS","4":"1"},{"1":"Bulwer's petrel","2":"Bulweria bulwerii","3":"BULBUL","4":"1"},{"1":"Caspian tern","2":"Hydroprogne caspia","3":"HYDCAS","4":"1"},{"1":"Crested penguin (unidentified)","2":"Eudyptes /agadyptes sp","3":"EUDMEG","4":"1"},{"1":"Flesh-footed / Wedge-tailed shearwater","2":"Puffinus carneipes / pacificus","3":"PUFCARPAC","4":"1"},{"1":"Frigatebird (unidentified)","2":"Fregata sp","3":"FRESP","4":"1"},{"1":"Herald petrel","2":"Pterodroma heraldica","3":"PTEHER","4":"1"},{"1":"Juanernandez petrel","2":"Pterodroma externa","3":"PTEEXT","4":"1"},{"1":"Kerguelen petrel","2":"Lugensa brevirostris","3":"LUGBRE","4":"1"},{"1":"Lesser frigatebird","2":"Fregata ariel","3":"FREARI","4":"1"},{"1":"Little tern","2":"Sterna albifrons","3":"STEALB","4":"1"},{"1":"Phoenix petrel","2":"Pterodroma alba","3":"PTEALB","4":"1"},{"1":"Pycroft's petrel","2":"Pterodroma pycrofti","3":"PTEPYC","4":"1"},{"1":"Salvin's prion","2":"Pachyptila salvini","3":"PACSAL","4":"1"},{"1":"Stejneger's petrel","2":"Pterodroma longirostris","3":"PTELON","4":"1"},{"1":"Streaked shearwater","2":"Calonectris leucomelas","3":"CALLEU","4":"1"},{"1":"Tahiti petrel","2":"Pseudobulweria rostrata","3":"PSEROS","4":"1"},{"1":"White-tailed tropicbird","2":"Phaethon lepturus","3":"PHALEP","4":"1"},{"1":"White-winged black tern","2":"Chlidonias leucopterus","3":"CHLLEU","4":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="how-many-penguins-were-seen-hint-there-are-many-types-of-penguin" class="section level2">
+<h2>2.5 - How many penguins were seen? (Hint: there are many types of penguin)</h2>
+<p>158, based on a search for <em>penguin</em> anywhere in the species common name:</p>
+<pre class="r"><code>bird_data_by_record_id_clean %&gt;%
+filter(str_detect(species_common_name, &quot;[pP]enguin&quot;)) %&gt;% 
+#group_by(species_common_name, 
+#         species_scientific_name,
+#         species_abbreviation) %&gt;% 
+summarise(total_number_penguins = sum(count)) #%&gt;% </code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["total_number_penguins"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"158"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>#arrange(desc(total_number_penguins)) </code></pre>
+</div>
+</div>
+<div id="other-analysis" class="section level1">
+<h1>3 - Other analysis</h1>
+<div id="overview-by-year-and-ship-activity---get-data" class="section level2">
+<h2>3.1.1 - overview by year and ship activity - get data</h2>
+<pre class="r"><code>data_by_year_and_ship_activity  &lt;-
+  bird_data_by_record_id_clean %&gt;%
+  left_join(ship_data_by_record_id_clean, by = &quot;record_id&quot;)  %&gt;%
+select(record_id,
+        species_common_name,
+         species_scientific_name,
+         species_abbreviation,
+         count,
+         age,
+         sact,
+        date,
+        lat,
+        long) %&gt;%
+        mutate(year = substring(date,1,4)) %&gt;% 
+         mutate(
+           ship_activity = case_when(
+             is.na(sact) ~ &quot;Not recorded&quot;,
+             sact == 1 ~ &quot;steaming, sailing&quot;,
+             sact == 2 ~ &quot;dropping trash&quot;,
+             sact == 3 ~ &quot;trawling&quot;,
+             sact == 4 ~ &quot;oceanography&quot;,
+             sact == 5 ~ &quot;potting&quot;,
+             sact == 6 ~ &quot;line fishing&quot;,
+             sact == 7 ~ &quot;cleaning fish&quot;,
+             sact == 8 ~ &quot;stationary&quot;,
+             sact == 9 ~ &quot;flying helicopters&quot;,
+             sact == 10 ~ &quot;whaling&quot;,
+             TRUE       ~ &quot;error - please check record&quot;
+           )
+         ) </code></pre>
+</div>
+<div id="overview-by-year-and-ship-activity---view-summary" class="section level2">
+<h2>3.1.2 - overview by year and ship activity - view summary</h2>
+<p>I’ve produced this table to give myself a quick overview of:</p>
+<ul>
+<li><p>which years have data</p></li>
+<li><p>whether the number of observations per year is consistent</p></li>
+<li><p>which types of shipping activity there are in the data</p></li>
+</ul>
+<p>Probably the most useful insights for me at this stage are that:</p>
+<ul>
+<li><p>Not all years have observations (earliest is 1969, latest 1990, nothing for 1970-74)</p></li>
+<li><p>The number of observations can vary greatly from year to year</p></li>
+<li><p>The last couple of years of the data seem particularly low on observations (see <em>steaming, sailing</em> records for 1988-90); makes me wonder if recording “petered out”</p></li>
+</ul>
+<pre class="r"><code>data_by_year_and_ship_activity %&gt;% 
+  group_by(year, ship_activity) %&gt;% 
+  summarise(number_of_records = n()) %&gt;%
+  pivot_wider(names_from = ship_activity, values_from = number_of_records)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;year&#39; (override with `.groups` argument)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["year"],"name":[1],"type":["chr"],"align":["left"]},{"label":["stationary"],"name":[2],"type":["int"],"align":["right"]},{"label":["steaming, sailing"],"name":[3],"type":["int"],"align":["right"]},{"label":["trawling"],"name":[4],"type":["int"],"align":["right"]},{"label":["flying helicopters"],"name":[5],"type":["int"],"align":["right"]},{"label":["line fishing"],"name":[6],"type":["int"],"align":["right"]},{"label":["potting"],"name":[7],"type":["int"],"align":["right"]},{"label":["oceanography"],"name":[8],"type":["int"],"align":["right"]},{"label":["Not recorded"],"name":[9],"type":["int"],"align":["right"]}],"data":[{"1":"1969","2":"133","3":"1665","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1975","2":"29","3":"793","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1976","2":"5","3":"1448","4":"70","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1977","2":"22","3":"1131","4":"119","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1978","2":"25","3":"2474","4":"120","5":"2","6":"172","7":"46","8":"NA","9":"NA"},{"1":"1979","2":"33","3":"2476","4":"33","5":"NA","6":"142","7":"NA","8":"NA","9":"NA"},{"1":"1980","2":"66","3":"4241","4":"NA","5":"NA","6":"134","7":"NA","8":"NA","9":"NA"},{"1":"1981","2":"121","3":"3775","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1982","2":"106","3":"3039","4":"NA","5":"NA","6":"9","7":"NA","8":"NA","9":"NA"},{"1":"1983","2":"179","3":"1646","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1984","2":"557","3":"5024","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1985","2":"464","3":"6044","4":"69","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1986","2":"1015","3":"3841","4":"NA","5":"NA","6":"NA","7":"NA","8":"314","9":"NA"},{"1":"1987","2":"409","3":"4977","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1988","2":"608","3":"1016","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1989","2":"201","3":"104","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"1990","2":"NA","3":"121","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"NA","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="records-with-very-high-counts" class="section level2">
+<h2>3.2.1 - Records with very high counts</h2>
+<ul>
+<li><p>These records may represent people recording genuinely high numbers, but they would merit further investigation - someone recording the maximum number the system can cope with makes me suspicious.</p></li>
+<li><p>The table <strong>bird_data_codes_clean</strong> states that 99,999 (the largest number it’s possible to record for <em>count</em>) should be used for sightings of over 100,000 individuals, so it’s possible, but I’d want to be sure before quoting this anywhere.</p></li>
+<li><p>A quick Google search tells me that the Short-tailed shearwater is, for example, the Australia’s most numerous seabird, and that breeding colonies can contain an astonishing 16 million adults, so maybe I should stop being so data-skeptic and just enjoy the wonder of it!</p></li>
+<li><p>It would be interesting to compare these high numbers to known locations of colonies: as shown in <strong>3.2.2 below</strong>, the high counts for the Short-tailed shearwater are focused in specific areas; if these correspond with known colonies, it would reassure me that the data is correct (and make me wonder what the real number of individuals was!)</p></li>
+</ul>
+<pre class="r"><code>data_by_year_and_ship_activity %&gt;% 
+  select(date, species_common_name, record_id, count) %&gt;% 
+arrange(desc(count)) %&gt;% 
+head(20)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["date"],"name":[1],"type":["dttm"],"align":["right"]},{"label":["species_common_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["record_id"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["count"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"1976-10-23","2":"Short-tailed shearwater","3":"2119014","4":"99999"},{"1":"1978-09-30","2":"Short-tailed shearwater","3":"4024023","4":"99999"},{"1":"1978-02-12","2":"Short-tailed shearwater","3":"4133105","4":"99999"},{"1":"1978-02-12","2":"Short-tailed shearwater","3":"4133106","4":"99999"},{"1":"1986-10-12","2":"Short-tailed shearwater","3":"12029001","4":"99999"},{"1":"1986-09-21","2":"Prion (unidentified)","3":"86010070","4":"99999"},{"1":"1980-02-07","2":"Short-tailed shearwater","3":"6006002","4":"50000"},{"1":"1980-01-05","2":"Short-tailed shearwater","3":"6027003","4":"50000"},{"1":"1980-04-25","2":"Short-tailed shearwater","3":"6056001","4":"40000"},{"1":"1987-07-21","2":"Prion (unidentified)","3":"87010028","4":"40000"},{"1":"1978-10-21","2":"Short-tailed shearwater","3":"4026005","4":"30000"},{"1":"1978-02-23","2":"Short-tailed shearwater","3":"4116035","4":"30000"},{"1":"1985-02-02","2":"Sooty shearwater","3":"85004003","4":"25000"},{"1":"1987-07-21","2":"Fluttering shearwater","3":"87010028","4":"25000"},{"1":"1976-10-23","2":"Short-tailed shearwater","3":"2119013","4":"20000"},{"1":"1980-01-04","2":"Short-tailed shearwater","3":"6026038","4":"20000"},{"1":"1981-10-24","2":"Short-tailed shearwater","3":"7091002","4":"20000"},{"1":"1984-12-25","2":"Short-tailed shearwater","3":"64038104","4":"20000"},{"1":"1986-11-24","2":"Prion (unidentified)","3":"86012362","4":"20000"},{"1":"1977-12-03","2":"Prion (unidentified)","3":"3114006","4":"10000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="records-for-short-tailed-shearwater-where-count-is-99999-shown-by-year-and-location" class="section level2">
+<h2>3.2.2 - Records for Short-tailed shearwater where count is 99,999 shown by year and location</h2>
+<pre class="r"><code>data_by_year_and_ship_activity %&gt;%
+  filter(species_common_name == &quot;Short-tailed shearwater&quot;,
+         count == 99999) %&gt;% 
+  select(species_common_name,
+         year,
+         lat,
+         long,
+         count) %&gt;% 
+  arrange(lat,
+          long)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["species_common_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["year"],"name":[2],"type":["chr"],"align":["left"]},{"label":["lat"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["long"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["count"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"Short-tailed shearwater","2":"1978","3":"-41.83333","4":"148.6167","5":"99999"},{"1":"Short-tailed shearwater","2":"1978","3":"-41.58333","4":"148.8000","5":"99999"},{"1":"Short-tailed shearwater","2":"1986","3":"-38.00000","4":"141.0000","5":"99999"},{"1":"Short-tailed shearwater","2":"1978","3":"-38.00000","4":"143.0000","5":"99999"},{"1":"Short-tailed shearwater","2":"1976","3":"-38.00000","4":"145.0000","5":"99999"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="number-of-gannets-recorded-per-year" class="section level2">
+<h2>3.3 - Number of Gannets recorded per year</h2>
+<p>Just having a look at this to see if there was anything interesting. As with 3.2 above, it tells me I need to think about the number of observations there were - and perhaps to be careful when summarising counts by year, or comparing years.</p>
+<p>Dividing the total count by the number of observations doesn’t give any meaningful insights (you could be comparing a sighting of one individual passing through to an observation of a large group feeding), but I was just using as a crude starting point to think about how I could provide a data series over time</p>
+<p>e.g. perhaps to look only at observations where the count was above a certain threshold, where at least a certain number of observations were available in the year, for a species or location where the group size might tell us something (e.g. number at a breeding site over time).</p>
+<pre class="r"><code>data_by_year_and_ship_activity %&gt;%
+  filter(str_detect(species_common_name, &quot;[gG]annet&quot;),
+         ship_activity == &quot;steaming, sailing&quot;) %&gt;%
+  group_by(year) %&gt;% 
+  summarise(total_count = sum(count),
+            number_of_observations = n(),
+            avg_number_of_individuals_per_observation = (sum(count)/n())
+            )</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["year"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_count"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["number_of_observations"],"name":[3],"type":["int"],"align":["right"]},{"label":["avg_number_of_individuals_per_observation"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"1969","2":"969","3":"37","4":"26.189189"},{"1":"1975","2":"72","3":"12","4":"6.000000"},{"1":"1976","2":"224","3":"15","4":"14.933333"},{"1":"1977","2":"39","3":"17","4":"2.294118"},{"1":"1978","2":"631","3":"47","4":"13.425532"},{"1":"1979","2":"367","3":"52","4":"7.057692"},{"1":"1980","2":"695","3":"72","4":"9.652778"},{"1":"1981","2":"436","3":"111","4":"3.927928"},{"1":"1982","2":"374","3":"53","4":"7.056604"},{"1":"1983","2":"975","3":"45","4":"21.666667"},{"1":"1984","2":"5076","3":"272","4":"18.661765"},{"1":"1985","2":"4834","3":"307","4":"15.745928"},{"1":"1986","2":"3657","3":"108","4":"33.861111"},{"1":"1987","2":"6105","3":"304","4":"20.082237"},{"1":"1988","2":"1632","3":"62","4":"26.322581"},{"1":"1989","2":"4","3":"5","4":"0.800000"},{"1":"1990","2":"1","3":"1","4":"1.000000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="other-thoughts-on-how-i-could-investigate-the-data" class="section level2">
+<h2>3.4 - other thoughts on how I could investigate the data</h2>
+<ul>
+<li><p>Species name: the data uses names based on a New Zealand checklist, so I considered using the list at the link below to check/standardise species names, or perhaps to view the bird data by family or conservation status. I decided not so I didn’t get distracted from the main tasks, but this might be interesting to come back to later. <a href="https://avibase.bsc-eoc.org/checklist.jsp?region=NZ" class="uri">https://avibase.bsc-eoc.org/checklist.jsp?region=NZ</a></p></li>
+<li><p>I’d be interested to come back to this data once I’ve learned a bit more about data visualisation techniques: it’s difficult to gain any insights from just looking at the coordinates in the data, and using a mapping tool create a heat map would help me visualise this - for example, comparing the information on Gannets in section 3.3 above with some of the known locations of Gannet colonies: <a href="https://teara.govt.nz/en/map/5819/new-zealands-main-gannet-colonies" class="uri">https://teara.govt.nz/en/map/5819/new-zealands-main-gannet-colonies</a></p></li>
+</ul>
+</div>
+</div>
 
 
 

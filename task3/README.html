@@ -414,7 +414,7 @@ summary {
 
 
 <div id="dirty-data-project-task-3-seabird-observation-data" class="section level1">
-<h1>Dirty data project Task 3: Seabird observation data</h1>
+<h1>Dirty data project task 3: Seabird observation data</h1>
 </div>
 <div id="folder-structure" class="section level1">
 <h1>Folder structure</h1>
@@ -456,21 +456,21 @@ summary {
 </div>
 <div id="data_cleaning_scripts" class="section level2">
 <h2>02_data_cleaning_scripts</h2>
-<p>This contains a file called clean_data_seabirds.R</p>
+<p>This contains a file called <strong>clean_data_seabirds.R</strong></p>
 <div id="general-notes-on-approach-to-cleaning" class="section level3">
 <h3>General notes on approach to cleaning</h3>
 <ul>
-<li><p>I have removed certain unnecessary strings (detailed below) from the species name columns, but I have not attempted to clean them up any further.For example, there are names recorded as <em>Petrel (unidentified)</em>and <em>Wandering albatross sensu lato</em> - I have not made any attempt to refine these or group them with other species names, as I don’t know enough about either the species involved or the level of knowledge of the observer.</p></li>
-<li><p>I have concentrated my efforts on columns related to species name and count, and the date and location of the observation; the tables contain a number of other columns with lower-level, and these might require further before being used.</p></li>
-<li><p>I have retained observations where the count of birds is NA, and updated count to zero - I don’t want to remove or ignore these rows, as they could be useful (e.g. not seeing any birds in a place you might expect to could in itself be a useful observation).</p></li>
+<li><p>I have removed certain unnecessary strings (detailed below) from the species name columns, but I have not attempted to clean them up any further. For example, there are names recorded as <em>Petrel (unidentified)</em>and <em>Wandering albatross sensu lato</em> - I have not made any attempt to refine these or group them with other species names, as I don’t know enough about either the species involved or the level of knowledge of the observer.</p></li>
+<li><p>I have concentrated my efforts on columns related to species name and count, and the date and location of the observation; the tables contain a number of other columns with lower-leveldetail, and these might require further before being used.</p></li>
+<li><p>I have retained observations where the count of birds is NA, and updated count to zero - I don’t want to remove or ignore these rows at this stage, as they could be useful (e.g. not seeing any birds in a place you might expect to could in itself be a useful observation).</p></li>
 </ul>
 </div>
 <div id="details-of-the-cleaning-file-clean_data_seabirds.r" class="section level3">
-<h3>Details of the cleaning file clean_data_seabirds.R</h3>
+<h3>Details of the cleaning file <em>clean_data_seabirds.R</em></h3>
 <ul>
-<li><p>Checks if the Excel file <strong>seabirds.xls</strong> contains the expected worksheets, as detailed in 01_raw_data above. It returns an error if the four expected sheet names are not found. If there are any extra worksheets, these will be ignored and the process will continue.</p></li>
+<li><p>Checks if the Excel file <strong>seabirds.xls</strong> contains the expected worksheets, as detailed in <em>01_raw_data</em> above. It returns an error if the four expected sheet names are not found. If there are any extra worksheets, these will be ignored and the process will continue.</p></li>
 <li><p>Reads the contents of the four expected sheets into objects in the environment</p></li>
-<li><p>Creates new versions of each table with the suffix **_clean**, and cleans the variable names of these objects using janitor; the following four objects will be used in the rest of the process:</p></li>
+<li><p>Creates new versions of each table with the suffix <strong>clean</strong>, and cleans the variable names of these objects using janitor; the following four objects will be used in the rest of the process:</p></li>
 </ul>
 <table>
 <tbody>
@@ -554,7 +554,7 @@ summary {
 <ul>
 <li><p>Removes any leading or trailing spaces left in these columns after the changes above; also removes the square brackets found in some fields</p></li>
 <li><p>Updates NA to 0 in numeric count columns</p></li>
-<li><p>Writes the four **_clean** table objects into csv files with the same names in the folder 03_clean_data</p></li>
+<li><p>Writes the four <strong>clean</strong> table objects into csv files with the same names in the folder <strong>03_clean_data</strong></p></li>
 </ul>
 </div>
 </div>

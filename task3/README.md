@@ -27,9 +27,9 @@ This contains a file called **clean_data_seabirds.R**
 
 ### General notes on approach to cleaning
 
-* I have removed certain unnecessary strings (detailed below) from the species name columns, but I have not attempted to clean them up any further. For example, there are names recorded as *Petrel (unidentified)*and *Wandering albatross sensu lato* - I have not made any attempt to refine these or group them with other species names, as I don't know enough about either the species involved or the level of knowledge of the observer.
+* I have removed certain unnecessary strings (detailed below) from the species name columns, but I have not attempted to clean them up any further. For example, there are names recorded as *Petrel (unidentified)* and *Wandering albatross sensu lato* - I have not made any attempt at this stage to refine these or group them with other species names, as I don't know enough about either the species involved or the level of knowledge of the observer.
 
-* I have concentrated my efforts on columns related to species name and count, and the date and location of the observation; the tables contain a number of other columns with lower-leveldetail, and these might require further before being  used.
+* I have concentrated my efforts on columns related to species name and count, and the date and location of the observation; the tables contain a number of other columns with lower-level detail, and these might require further cleaning before being  used.
 
 * I have retained observations where the count of birds is NA, and updated count to zero - I don't want to remove or ignore these rows at this stage, as they could be useful (e.g. not seeing any birds in a place you might expect to could in itself  be a useful observation).
 
