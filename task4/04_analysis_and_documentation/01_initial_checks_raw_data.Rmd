@@ -67,7 +67,7 @@ library(dplyr)
 
 # check sheet names
 ```{r}
-excel_sheets(here("01_raw_data/boing-boing-candy-2016.xlsx"))
+excel_sheets(here("01_raw_data/boing-boing-candy-2017.xlsx"))
 ```
 
 # Read data
@@ -86,6 +86,12 @@ twenty_seventeen <-
   read_excel(here("01_raw_data/boing-boing-candy-2017.xlsx"))
 ```
 
+# check variable names
+```{r}
+names(twenty_seventeen)
+
+```
+
 
 
 # Test - pivot_longer 2015
@@ -102,9 +108,5 @@ twenty_fifteen_long <-
 pivot_longer(cols = "[Butterfinger]":"[York Peppermint Patties]",
              names_to = "candy_name",
              values_to = "values",)
-```
-
-```{r}
-names(twenty_fifteen)
 ```
 
