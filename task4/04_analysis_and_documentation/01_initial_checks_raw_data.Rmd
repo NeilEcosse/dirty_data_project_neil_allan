@@ -41,20 +41,20 @@ Things to think about when I create a cleaning script:
 
 * invalid ages recorded in 2015
 
-* ???what the heck are the "degrees of separation from Beyonce" type columns in 2015
+* ??what the heck are the "degrees of separation from Beyonce" type columns in 2015 ??
 
 
 ## Conclusions before I start to write cleaning files:
 
 * Write code to sort out structure using pivot_longer first - come back and look at data quality afterwards
 
-* Maybe the column heading are not as horrible as they look - once I pivot_longer and get rid of brackets and extra characters, might not be too bad, from looking at them they seem like they might be relatively consistent between years (though I fully expect to discover more problems later!)
+* Maybe the column heading are not as horrible as they look - once I pivot_longer and get rid of brackets and extra characters, candy columns might not be too bad, from looking at them they seem like they might be relatively consistent between years (though I fully expect to discover more problems later!)
 
 * I could hard code the column names for data, age etc columns - the code is going to be very specific for each year, not something that needs to be repeatable for all years
 
-* Probably best to have a separate script for each file - could get confusing if not
+* Probably best to have a separate cleaning script for each file - could get confusing if not
 
-* need to add a unique id before pivot
+* need to add a unique id before pivot_longer
 
 
 
@@ -65,9 +65,9 @@ library(tidyverse)
 library(dplyr)
 ```
 
-
+# check sheet names
 ```{r}
-excel_sheets(here("01_raw_data/boing-boing-candy-2015.xlsx"))
+excel_sheets(here("01_raw_data/boing-boing-candy-2016.xlsx"))
 ```
 
 # Read data
