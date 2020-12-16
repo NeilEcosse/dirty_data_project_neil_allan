@@ -34,6 +34,33 @@ candy_2015_clean <-
                            `Are you going actually going trick or treating yourself?`,
                            sep = "_" ))
 
+
+
+# check if there are dates from more than one year - create error message if there are
+
+# need to check how to do this - will come back to it later
+
+#max_year <-
+#candy_2015_clean %>% 
+#    select(year) %>% 
+#    group_by(year) %>%
+#    arrange(year) %>% 
+#    head(1)
+
+#min_year <-
+#  candy_2015_clean %>% 
+#  select(year) %>% 
+#  group_by(year) %>%
+#  arrange(desc(year)) %>% 
+#  head(1)
+
+#  stopifnot(
+#    )
+
+# rm(max_year, min_year)
+
+
+
 # use pivot_longer to convert candy columns to rows
 candy_2015_clean <- 
   candy_2015_clean %>% 
@@ -51,6 +78,12 @@ candy_2015_clean <-
   rename("date" = "timestamp") %>% 
   rename("age_imported" = "how_old_are_you") %>% 
   rename("going_trick_or_treating" = "are_you_going_actually_going_trick_or_treating_yourself")
+
+
+# delete observations where rating is NA - these are 'blank' rows created by pivot longer, not required
+candy_2015_clean <-
+  candy_2015_clean %>% 
+  filter(!is.na(rating))
   
 # remove punctuation and spaces from unique_id
 candy_2015_clean <-
@@ -64,17 +97,22 @@ candy_2015_clean <-
   mutate(candy_name = str_remove_all(candy_name,"\\]"))
 
 
-  
-#candy_2015_clean <-
-#  candy_2015_clean %>%
-#  separate(age_imported, into = c("age", "junk"), sep = ".0")
-
-
-# delete observations where rating is NA - these are 'blank' rows created by pivot longer, not required
-
+# create a numeric age column
 candy_2015_clean <-
   candy_2015_clean %>% 
-  filter(!is.na(rating))
+  mutate(age = as.numeric(str_extract(age_imported, "[0-9]+")))
+
+
+
+# convert ages greater than 120 to NA
+candy_2015_clean <-
+  candy_2015_clean %>% 
+ mutate(age = if_else(age > 120, NA_real_, age))
+
+
+
+# write output to csv file
+write_csv(candy_2015_clean, "03_clean_data/candy_2015_clean.csv")
 
 
 
