@@ -104,22 +104,60 @@ candy_2016_clean <-
 
 
 
-# write output to csv file
-write_csv(candy_2016_clean, "03_clean_data/candy_2016_clean.csv")
+# make a clean country column using various  regex searches
 
-check_country_us <-
-  candy_2016_clean %>%
-  filter(str_detect(country_imported, "[uU][sS][aA]")) %>% 
-  group_by(country_imported) %>%
-  summarise(count  = n()) %>% 
-  arrange(country_imported)
-
+# This is not ideal - it will not cope with any new genuine countries if they're added to the data
+# could maybe get a list of countries to match the data to?
 candy_2016_clean <-
   candy_2016_clean %>%
   select(date:age) %>% 
   mutate(country = case_when(
-                    (str_detect(country_imported, "Not") & str_detect(country_imported, "[uU][sS][aA]")) ~ NA_character_,
-                    str_detect(country_imported, "[uU][sS][aA]") ~ "USA"
-                    ) 
-                    )
+  #USA
+    (str_detect(country_imported, "Not") & str_detect(country_imported, "[uU][sS][aA]")) ~ NA_character_,
+    str_detect(country_imported, "[uU][sS][aA]") ~ "USA",
+    str_detect(country_imported, "^[uU][sS]") ~ "USA",
+    str_detect(country_imported, "^[uU][\\.][sS]") ~ "USA",
+    str_detect(country_imported, "[uU][nN][iI][tT]") & str_detect(country_imported, "[sS][tT]") ~ "USA",
+    str_detect(country_imported, "[aA][mM][eE][rR][iI][cC][aA]") ~ "USA",
+    str_detect(country_imported, "United Sates") ~ "USA",
+    str_detect(country_imported, "Murica") ~ "USA",
+    str_detect(country_imported, "The Yoo Ess of Aaayyyyyy") ~ "USA",
+    str_detect(country_imported, "^Merica") ~ "USA",
+  # Other genuine countries - this is where I'd prefer to use a look-up, otherwise I need 
+  # to update every time I have new data - they'd be dumped into NA
+    str_detect(country_imported, "^[aA]ustralia") ~ "Australia",
+    str_detect(country_imported, "^[aA]ustria") ~ "Austria",
+    str_detect(country_imported, "^[bB]elgium") ~ "Belgium",
+    str_detect(country_imported, "^[bB]rasil") ~ "Brazil",
+    str_detect(country_imported, "^[bB]razil") ~ "Brazil",
+    str_detect(country_imported, "^[cC]anada") ~ "Canada",
+    str_detect(country_imported, "^[cC]hina") ~ "China",
+    str_detect(country_imported, "^[cC]roatia") ~ "Croatia",
+    str_detect(country_imported, "^[eE]ngland") ~ "UK",
+    str_detect(country_imported, "^[eE]spaña") ~ "Spain",
+    str_detect(country_imported, "^[fF]inland") ~ "Finland",
+    str_detect(country_imported, "^[fF]rance") ~ "France",
+    str_detect(country_imported, "^[gG]ermany") ~ "Germany",
+    str_detect(country_imported, "^[hH]ungary") ~ "Hungary",
+    str_detect(country_imported, "^[jJ]apan") ~ "Japan",
+    #str_detect(country_imported, "^[kK]orea") ~ "South Korea",
+    str_detect(country_imported, "^[kK]enya") ~ "Kenya",
+    str_detect(country_imported, "^[mM]exico") ~ "Mexico",
+    str_detect(country_imported, "[nN]etherland") ~ "Netherlands",
+    str_detect(country_imported, "^[nN]ew [zZ]ealand") ~ "New Zealand",
+    str_detect(country_imported, "^[pP]anama") ~ "Panama",
+    str_detect(country_imported, "^[pP]hilippines") ~ "Philippines",
+    str_detect(country_imported, "^[pP]ortugal") ~ "Portugal",
+    str_detect(country_imported, "^[sS]outh [kK]orea") ~ "South Korea",
+    str_detect(country_imported, "^[sS]weden") ~ "Sweden",
+    str_detect(country_imported, "^[sS]witzerland") ~ "Switzerland",
+    str_detect(country_imported, "^[sS]weden") ~ "Sweden",
+    str_detect(country_imported, "^[uU][kK]") ~ "UK",
+    str_detect(country_imported, "^[uU]nited [kK]") ~ "UK",
+    TRUE ~ NA_character_
+  ) 
+  )
 
+
+# write output to csv file
+write_csv(candy_2016_clean, "03_clean_data/candy_2016_clean.csv")
