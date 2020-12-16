@@ -24,12 +24,13 @@ candy_2015_clean <-
   read_excel("01_raw_data/boing-boing-candy-2015.xlsx",
              sheet = "Form Responses 1")
 
-# drop unwanted variables, create year, country and unique_id columns
+# drop unwanted variables, create year, country, gender and unique_id columns
 candy_2015_clean <-
   candy_2015_clean %>% 
   select("Timestamp":"[York Peppermint Patties]" ) %>% 
   mutate(year = substring(Timestamp,1,4)) %>% 
-  mutate(country = NA_character_) %>% 
+  mutate(country = NA_character_) %>%
+  mutate(gender = NA_character_) %>%
   mutate(unique_id = paste(Timestamp,
                            substring(`How old are you?`,1,2),
                            `Are you going actually going trick or treating yourself?`,
