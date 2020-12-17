@@ -70,7 +70,7 @@ candy_all_years <-
 bind_rows(candy_2015_clean, candy_2016_clean, candy_2017_clean)
 ```
 
-## 1.4 - Check the rows for each year match the individual yearly tables
+## 1.4 - Check the rows for each year match the individual yearly tables in the environment
 ```{r}
 candy_all_years %>% 
   group_by(year) %>% 
@@ -87,6 +87,8 @@ rm(candy_2015_clean, candy_2016_clean, candy_2017_clean)
 # 2 - Analysis questions set by CodeClan
 
 ## 2.1 - What is the total number of candy ratings given across the three years. (number of candy ratings, not number of raters. Don’t count missing values)
+
+I've already dropped NA ratings in  my cleaning process after the pivot_longer stage
 ```{r}
 candy_all_years %>%
   filter(!is.na(rating)) %>%
@@ -96,7 +98,7 @@ candy_all_years %>%
 
 ## 2.2 - What was the average age of people who are going out trick or treating and the average age of people not going trick or treating?
 
-I'm not sure if I need to do something about "NA" in the age field here - but it's getting late in the day, so I'll just carry on!
+I'm not sure if I need to do something about "NA" in the age field here
 ```{r}
 candy_all_years %>% 
   filter(!is.na(going_trick_or_treating)) %>%
@@ -107,39 +109,35 @@ candy_all_years %>%
 
 ## 2.3 - For each of joy, despair and meh, which candy bar revived the most of these ratings?
 
-I think I should be able to do this in one query, I may come backto this later
+
 ```{r}
-# JOY ratings
-candy_all_years %>% 
-  filter(rating =="JOY") %>% 
-  group_by(candy_name) %>% 
-  summarise(total_joy_ratings = n()) %>% 
-  arrange(desc(total_joy_ratings)) %>% 
-  head(1)
 
-# DESPAIR ratings
-candy_all_years %>% 
-  filter(rating =="DESPAIR") %>% 
-  group_by(candy_name) %>% 
-  summarise(total_despair_ratings = n()) %>% 
-  arrange(desc(total_despair_ratings)) %>% 
-  head(1)
-
-# MEH ratings
-candy_all_years %>% 
-  filter(rating =="MEH") %>% 
-  group_by(candy_name) %>% 
-  summarise(total_meh_ratings = n()) %>% 
-  arrange(desc(total_meh_ratings)) %>% 
-  head(1)
+  candy_all_years %>%
+  group_by(rating, candy_name) %>%
+  summarise(total_ratings = n()) %>% 
+  slice_max(total_ratings) %>% 
+  rename("item_with_most_ratings" = "candy_name")
+  
+  
 ```
+
 
 ## 2.4  - How many people rated Starburst as despair?
 
-I'm using a unique_id I created in the cleaning process to define  "people" - it's a combination of various fields in the raw data. I've had a look at the data, and am satisfied I only have one candy_name containing the string "[sS]tarburst".
+I'm using a unique_id I created in the cleaning process to define  a person - it's a combination of various fields in the raw data.
 
-This is another one I'd like to come back to with a neater bit of code.
+This is one I'd like to come back to with a neater bit of code. I'm quite fond of the table name **starburst_despair_people** though!
 ```{r}
+# check if there are different variations of "Starburst" in the data:
+candy_all_years %>%
+  filter(str_detect(candy_name, "[sS][tT][aA][rR]")) %>% 
+  group_by(candy_name) %>% 
+  summarise(number_of_records = n())
+```
+
+
+```{r}
+# group at person level using unique_id:
 starburst_despair_people <-  
 candy_all_years %>% 
   filter(candy_name == "Starburst") %>% 
@@ -147,26 +145,22 @@ candy_all_years %>%
   select(unique_id, candy_name, rating) %>% 
   group_by(unique_id, candy_name, rating) %>% 
   arrange(unique_id)
-  
+ 
+# response to question: 
  starburst_despair_people %>%
    group_by(rating) %>% 
-   summarise(starburst_despair_people = n())
+   summarise(number_of_people = n())
  
   
 ```
 
-## 2.5 - What was the most popular candy bar by this rating system for each gender in the dataset?
+
+# For the next three questions, count despair as -1, joy as +1 and meh as 0
+I'm adding a column for this:
 ```{r}
 candy_all_years <-
   candy_all_years %>%
-  select(year,
-         unique_id,
-         age,
-         gender,
-         country,
-         going_trick_or_treating,
-         candy_name,
-         rating) %>% 
+  select(year:rating) %>% 
          mutate(rating_numeric = case_when(
                             rating ==  "DESPAIR" ~ -1,
                             rating ==  "JOY" ~ 1,
@@ -176,5 +170,56 @@ candy_all_years <-
   )
   )
 ```
-`
+
+## 2.5 - What was the most popular candy bar by this rating system for each gender in the dataset?
+
+**Check if gender contains clean data - looks OK.**
+
+Note that the 2015 raw data file did not have a gender variable.
+```{r}
+candy_all_years %>%
+group_by(gender) %>% 
+summarise(count =n())
+```
+
+
+Response to the question:
+```{r}
+candy_all_years %>%
+  filter(!is.na(gender)) %>% 
+  group_by(gender, candy_name) %>% 
+  summarise(popularity_value = sum(rating_numeric)) %>% 
+  slice_max(popularity_value) %>% 
+  rename("most_popular_item" = "candy_name")
+  
+```
+
+## 2.6 - What was the most popular candy bar in each year?
+
+```{r}
+candy_all_years %>%
+  group_by(year, candy_name) %>% 
+  summarise(popularity_value = sum(rating_numeric)) %>% 
+  slice_max(popularity_value) %>% 
+  rename("most_popular_item" = "candy_name")
+```
+
+
+## 2.7 - What was the most popular candy bar by this rating for people in US, Canada, UK and all other countries?
+
+```{r}
+candy_all_years %>% 
+  group_by(country_summary = case_when(
+                                      country == "USA" ~ "1. USA",
+                                      country == "Canada" ~ "2. Canada",
+                                      country == "UK" ~ "3. UK",
+                                      TRUE ~  "4. All other countries"
+                                      ),
+          candy_name) %>% 
+  summarise(popularity_value = sum(rating_numeric)) %>% 
+  slice_max(popularity_value) %>% 
+  arrange(country_summary) %>% 
+  rename("most_popular_item" = "candy_name")
+```
+
 

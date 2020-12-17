@@ -95,7 +95,11 @@ candy_2017_clean <-
 
 # make a clean country column using various  regex searches
 
-# This is not ideal - it will not cope with any new genuine countries if they're added to the data
+# I might come back to this and put it in a separate R file - 
+# this could be used by both 2016 & 2017 cleaning scripts,
+# list would only have to be updated in one place that way
+
+# This code is not ideal - it will not cope with any new genuine countries if they're added to the data,
 # could maybe get a list of countries to match the data to?
 candy_2017_clean <-
   candy_2017_clean %>%
@@ -123,8 +127,10 @@ candy_2017_clean <-
     str_detect(country_imported, "North Carolina") ~ "USA",
     str_detect(country_imported, "Pittsburgh") ~ "USA",
     str_detect(country_imported, "Pittsburgh") ~ "USA",
+    
     # Other genuine countries - this is where I'd prefer to use a look-up, otherwise I need 
-    # to update every time I have new data - they'd be dumped into NA
+    # to update every time I have new data - new ones will be dumped into NA
+    
     str_detect(country_imported, "^[aA]ustralia") ~ "Australia",
     str_detect(country_imported, "^[aA]ustria") ~ "Austria",
     str_detect(country_imported, "^[bB]elgium") ~ "Belgium",
@@ -177,9 +183,11 @@ write_csv(candy_2017_clean, "03_clean_data/candy_2017_clean.csv")
 # since the script isn't perfect, this is a here as a check
 check_countries_2017 <-
   candy_2017_clean %>% 
-  group_by(country, country_imported) %>% 
+  group_by(country_imported, country) %>% 
   summarise(count = n()) %>% 
-  arrange(country, country_imported)
+  arrange(country, country_imported) %>% 
+  rename("clean_country" = "country") %>% 
+  rename("raw_country" = "country_imported")
 
 # drop the candy object from environment
 rm(candy_2017_clean)
