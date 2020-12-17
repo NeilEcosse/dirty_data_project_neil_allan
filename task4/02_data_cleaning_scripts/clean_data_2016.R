@@ -73,7 +73,8 @@ candy_2016_clean <-
   rename("state_province_county_imported" = "which_state_province_county_do_you_live_in") 
 
 
-# delete observations where rating is NA - these are 'blank' rows created by pivot longer, not required
+# delete observations where rating is NA - either the person didn't review any candy, or 
+# these are 'blank' rows created by pivot longer, not required
 candy_2016_clean <-
   candy_2016_clean %>% 
   filter(!is.na(rating))
@@ -112,6 +113,7 @@ candy_2016_clean <-
 
 # This code is not ideal - it will not cope with any new genuine countries if they're added to the data
 # could maybe get a list of countries to match the data to?
+
 candy_2016_clean <-
   candy_2016_clean %>%
   select(date:age) %>% 
@@ -168,8 +170,10 @@ candy_2016_clean <-
 # write output to csv file
 write_csv(candy_2016_clean, "03_clean_data/candy_2016_clean.csv")
 
+
 # create a checklist of what countries have been updated to
 # since the script isn't perfect, this is a here as a check
+
 check_countries_2016 <-
   candy_2016_clean %>% 
   group_by(country_imported, country) %>% 
@@ -177,6 +181,7 @@ check_countries_2016 <-
   arrange(country, country_imported) %>% 
   rename("clean_country" = "country") %>% 
   rename("raw_country" = "country_imported")
+
 
 # drop the candy object from environment
 rm(candy_2016_clean)

@@ -197,7 +197,7 @@ head(20)
 
 * Searching for the coordinates on Google maps gives some further evidence to support these high counts:
 
-  * -38.00000, 1450000 is Melbourne - there is a colony of more than a million nearby: https://www.visitmelbourne.com/Regions/Phillip-Island/Things-to-do/Nature-and-wildlife/Wildlife-viewing/Bird-life
+  * -38.00000, 145.0000 is Melbourne - there is a colony of more than a million nearby: https://www.visitmelbourne.com/Regions/Phillip-Island/Things-to-do/Nature-and-wildlife/Wildlife-viewing/Bird-life
 
   * -41.83333, 148.6167 is off the coast of Tasmania - Tasmania has an estimated 209 colonies with 11.4 million burrows! https://dpipwe.tas.gov.au/wildlife-management/fauna-of-tasmania/birds/complete-list-of-tasmanian-birds/short-tailed-shearwater
 
@@ -246,6 +246,6 @@ data_by_year_and_ship_activity %>%
 
 * Species name: according to the table **bird_data_codes_clean**, the data uses names based on a New Zealand checklist, so I considered using the list at the link below to check/standardise species names, or perhaps to view the bird data by family or conservation status. I decided not to, so I didn't get distracted from the main tasks, but this might be interesting to come back to later.  https://avibase.bsc-eoc.org/checklist.jsp?region=NZ
 
-* I'd be interested to come back to this data once I've learned a bit more about data visualisation techniques: it's difficult to gain any insights from just looking at the coordinates in the data, and using a mapping tool create a heat map would help me visualise this. I could also bring in other data sources - for example, comparing the information on Gannets in section 3.3 above with some of the known locations of Gannet colonies: https://teara.govt.nz/en/map/5819/new-zealands-main-gannet-colonies
+* I'd be interested to come back to this data once I've learned a bit more about data visualisation techniques: it's difficult to gain any insights from just looking at the coordinates in the data, and using a mapping tool to create a heat map would help me visualise this. I could also bring in other data sources - for example, comparing the information on Gannets in section 3.3 above with some of the known locations of Gannet colonies: https://teara.govt.nz/en/map/5819/new-zealands-main-gannet-colonies
 
 

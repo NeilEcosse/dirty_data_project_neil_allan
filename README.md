@@ -10,7 +10,7 @@ This can be found in the folder **task3**
 
 ## Part 2
 
-We were all asked to look at some *halloween candy data* - this was designed to be a trickier task, with three tables of particularly messy data.
+We were all asked to look at some **halloween candy data** - this was designed to be a trickier task, with three tables of particularly messy data.
 
 This can be found in the folder **task4**
 

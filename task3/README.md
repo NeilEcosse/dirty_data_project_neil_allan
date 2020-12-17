@@ -49,8 +49,8 @@ It returns an error if the four expected sheet names are not found. If there are
 |------------------------------|
 | bird_data_by_record_id_clean |
 | ship_data_by_record_id_clean |
-| bird_data_codes              |
-| ship_data_codes              |
+| bird_data_codes_clean        |
+| ship_data_codes_clean        |
 
 
 * Checks that latitude and longitude of observations in the ship table contain valid data
