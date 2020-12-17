@@ -1,6 +1,8 @@
 ---
 title: "Dirty data project - task 4 analysis"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 This file answers the questions set by CodeClan
@@ -74,7 +76,7 @@ bind_rows(candy_2015_clean, candy_2016_clean, candy_2017_clean)
 ```{r}
 candy_all_years %>% 
   group_by(year) %>% 
-  summarise(count= n())
+  summarise(count= format(n(), big.mark= ","))
 ```
 
 ## 1.5 - Drop the separate yearly tables
@@ -92,7 +94,7 @@ I've already dropped NA ratings in  my cleaning process after the pivot_longer s
 ```{r}
 candy_all_years %>%
   filter(!is.na(rating)) %>%
-  summarise(total_number_ratings = n())
+  summarise(total_number_ratings = format(n(), big.mark= ","))
   
 ```
 
@@ -104,10 +106,10 @@ candy_all_years %>%
   filter(!is.na(going_trick_or_treating)) %>%
   filter(!is.na(age)) %>%
   group_by(going_trick_or_treating) %>% 
-  summarise(avg_age = mean(age))
+  summarise(avg_age = round(mean(age), 1))
 ```
 
-## 2.3 - For each of joy, despair and meh, which candy bar revived the most of these ratings?
+## 2.3 - For each of joy, despair and meh, which candy bar received the most of these ratings?
 
 
 ```{r}
@@ -126,13 +128,15 @@ candy_all_years %>%
 
 I'm using a unique_id I created in the cleaning process to define  a person - it's a combination of various fields in the raw data.
 
+I don't think I really need to do this - any one person can only have one row for their views on Starburst.
+
 This is one I'd like to come back to with a neater bit of code. I'm quite fond of the table name **starburst_despair_people** though!
 ```{r}
 # check if there are different variations of "Starburst" in the data:
 candy_all_years %>%
   filter(str_detect(candy_name, "[sS][tT][aA][rR]")) %>% 
   group_by(candy_name) %>% 
-  summarise(number_of_records = n())
+  summarise(number_people_rated_as_despair = n())
 ```
 
 
@@ -148,7 +152,7 @@ candy_all_years %>%
  
 # response to question: 
  starburst_despair_people %>%
-   group_by(rating) %>% 
+   group_by(rating, candy_name) %>% 
    summarise(number_of_people = n())
  
   
@@ -173,17 +177,10 @@ candy_all_years <-
 
 ## 2.5 - What was the most popular candy bar by this rating system for each gender in the dataset?
 
-**Check if gender contains clean data - looks OK.**
+
 
 Note that the 2015 raw data file did not have a gender variable.
-```{r}
-candy_all_years %>%
-group_by(gender) %>% 
-summarise(count =n())
-```
 
-
-Response to the question:
 ```{r}
 candy_all_years %>%
   filter(!is.na(gender)) %>% 
