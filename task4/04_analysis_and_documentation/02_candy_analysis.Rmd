@@ -17,7 +17,7 @@ library(here)
 # 1 - Prepare the data
 
 ## 1.1 - Import the files created by my cleaning scripts
-There may be some errors reading in data - I'm ignoring for the moment so I can get on with the main tasks
+
 ```{r}
 candy_2015_clean <-
   read_csv(here("03_clean_data/candy_2015_clean.csv"))
@@ -152,7 +152,7 @@ candy_all_years %>%
  
 # response to question: 
  starburst_despair_people %>%
-   group_by(rating, candy_name) %>% 
+   group_by(candy_name, rating) %>% 
    summarise(number_of_people = n())
  
   

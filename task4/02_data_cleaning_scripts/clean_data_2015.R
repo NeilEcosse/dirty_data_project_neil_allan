@@ -105,3 +105,6 @@ candy_2015_clean <-
 
 # write output to csv file
 write_csv(candy_2015_clean, "03_clean_data/candy_2015_clean.csv")
+
+# drop the object from environment
+rm(candy_2015_clean)
