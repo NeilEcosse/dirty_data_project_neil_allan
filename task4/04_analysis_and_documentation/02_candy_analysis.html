@@ -1709,7 +1709,6 @@ library(here)</code></pre>
 <h1>1 - Prepare the data</h1>
 <div id="import-the-files-created-by-my-cleaning-scripts" class="section level2">
 <h2>1.1 - Import the files created by my cleaning scripts</h2>
-<p>There may be some errors reading in data - I’m ignoring for the moment so I can get on with the main tasks</p>
 <pre class="r"><code>candy_2015_clean &lt;-
   read_csv(here(&quot;03_clean_data/candy_2015_clean.csv&quot;))</code></pre>
 <pre><code>## 
@@ -1917,12 +1916,12 @@ candy_all_years %&gt;%
  
 # response to question: 
  starburst_despair_people %&gt;%
-   group_by(rating, candy_name) %&gt;% 
+   group_by(candy_name, rating) %&gt;% 
    summarise(number_of_people = n())</code></pre>
-<pre><code>## `summarise()` regrouping output by &#39;rating&#39; (override with `.groups` argument)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;candy_name&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["rating"],"name":[1],"type":["chr"],"align":["left"]},{"label":["candy_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["number_of_people"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"DESPAIR","2":"Starburst","3":"1990"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["candy_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["rating"],"name":[2],"type":["chr"],"align":["left"]},{"label":["number_of_people"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"Starburst","2":"DESPAIR","3":"1990"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>

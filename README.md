@@ -2,7 +2,7 @@
 
 ## Part 1
 
-We were given the choice of three files to work on - I chose one containing seabird observation data.
+We were given the choice of three files to work on - I chose one containing **seabird observation data**.
 
 This can be found in the folder **task3**
 
