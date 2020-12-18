@@ -1848,8 +1848,8 @@ bind_rows(candy_2015_clean, candy_2016_clean, candy_2017_clean)</code></pre>
 </div>
 <div id="analysis-questions-set-by-codeclan" class="section level1">
 <h1>2 - Analysis questions set by CodeClan</h1>
-<div id="what-is-the-total-number-of-candy-ratings-given-across-the-three-years.-number-of-candy-ratings-not-number-of-raters.-dont-count-missing-values" class="section level2">
-<h2>2.1 - What is the total number of candy ratings given across the three years. (number of candy ratings, not number of raters. Don’t count missing values)</h2>
+<div id="what-is-the-total-number-of-candy-ratings-given-across-the-three-years-number-of-candy-ratings-not-number-of-raters.-dont-count-missing-values" class="section level2">
+<h2>2.1 - What is the total number of candy ratings given across the three years? (Number of candy ratings, not number of raters. Don’t count missing values)</h2>
 <p>I’ve already dropped NA ratings in my cleaning process after the pivot_longer stage</p>
 <pre class="r"><code>candy_all_years %&gt;%
   filter(!is.na(rating)) %&gt;%
@@ -1862,7 +1862,6 @@ bind_rows(candy_2015_clean, candy_2016_clean, candy_2017_clean)</code></pre>
 </div>
 <div id="what-was-the-average-age-of-people-who-are-going-out-trick-or-treating-and-the-average-age-of-people-not-going-trick-or-treating" class="section level2">
 <h2>2.2 - What was the average age of people who are going out trick or treating and the average age of people not going trick or treating?</h2>
-<p>I’m not sure if I need to do something about “NA” in the age field here</p>
 <pre class="r"><code>candy_all_years %&gt;% 
   filter(!is.na(going_trick_or_treating)) %&gt;%
   filter(!is.na(age)) %&gt;%
@@ -1898,11 +1897,11 @@ bind_rows(candy_2015_clean, candy_2016_clean, candy_2017_clean)</code></pre>
 candy_all_years %&gt;%
   filter(str_detect(candy_name, &quot;[sS][tT][aA][rR]&quot;)) %&gt;% 
   group_by(candy_name) %&gt;% 
-  summarise(number_people_rated_as_despair = n())</code></pre>
+  summarise(number_of_rows = n())</code></pre>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["candy_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["number_people_rated_as_despair"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Starburst","2":"8141"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["candy_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["number_of_rows"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Starburst","2":"8141"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code># group at person level using unique_id:

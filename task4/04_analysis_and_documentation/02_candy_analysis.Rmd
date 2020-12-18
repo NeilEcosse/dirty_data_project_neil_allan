@@ -31,6 +31,7 @@ candy_2017_clean <-
 
 
 ## 1.2 - Create new versions which only contain the columns I'm interested in
+
 ```{r}
 candy_2015_clean <-
   candy_2015_clean %>% 
@@ -67,12 +68,14 @@ candy_2017_clean <-
 ```
 
 ## 1.3 - Put these together into a single table
+
 ```{r}
 candy_all_years <-
 bind_rows(candy_2015_clean, candy_2016_clean, candy_2017_clean)
 ```
 
 ## 1.4 - Check the number of rows in the new table matches the individual yearly tables in the environment
+
 ```{r}
 candy_all_years %>% 
   group_by(year) %>% 
@@ -80,6 +83,7 @@ candy_all_years %>%
 ```
 
 ## 1.5 - Drop the separate yearly tables
+
 ```{r}
 rm(candy_2015_clean, candy_2016_clean, candy_2017_clean)
 ```
@@ -130,6 +134,7 @@ I'm using a unique_id I created in the cleaning process to define  a person - it
 I don't think I really need to do this - any one person can only have one row for their views on Starburst.
 
 This is one I'd like to come back to with a neater bit of code. Though I'm quite fond of the table name **starburst_despair_people**!
+
 ```{r}
 # check if there are different variations of "Starburst" in the data:
 candy_all_years %>%
