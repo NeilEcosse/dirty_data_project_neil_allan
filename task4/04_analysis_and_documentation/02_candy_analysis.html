@@ -1829,8 +1829,8 @@ candy_2017_clean &lt;-
 <pre class="r"><code>candy_all_years &lt;-
 bind_rows(candy_2015_clean, candy_2016_clean, candy_2017_clean)</code></pre>
 </div>
-<div id="check-the-rows-for-each-year-match-the-individual-yearly-tables-in-the-environment" class="section level2">
-<h2>1.4 - Check the rows for each year match the individual yearly tables in the environment</h2>
+<div id="check-the-number-of-rows-in-the-new-table-matches-the-individual-yearly-tables-in-the-environment" class="section level2">
+<h2>1.4 - Check the number of rows in the new table matches the individual yearly tables in the environment</h2>
 <pre class="r"><code>candy_all_years %&gt;% 
   group_by(year) %&gt;% 
   summarise(count= format(n(), big.mark= &quot;,&quot;))</code></pre>
@@ -1974,7 +1974,7 @@ candy_all_years %&gt;%
 <h2>2.7 - What was the most popular candy bar by this rating for people in US, Canada, UK and all other countries?</h2>
 <ul>
 <li><p>Note that the 2015 raw data file didn’t have a <strong>country</strong> column</p></li>
-<li><p>I’ve excluded country NAs from this query - if I didn’t, the whole of the 2015 dataset would all be dumped into the <strong>4. All other countries</strong> category</p></li>
+<li><p>I’ve excluded country NAs from this query - if I didn’t, the whole of the 2015 dataset would be dumped into the <strong>4. All other countries</strong> category</p></li>
 </ul>
 <pre class="r"><code>candy_all_years %&gt;% 
   filter(!is.na(country)) %&gt;% 

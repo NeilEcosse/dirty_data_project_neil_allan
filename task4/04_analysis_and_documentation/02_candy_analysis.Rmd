@@ -72,7 +72,7 @@ candy_all_years <-
 bind_rows(candy_2015_clean, candy_2016_clean, candy_2017_clean)
 ```
 
-## 1.4 - Check the rows for each year match the individual yearly tables in the environment
+## 1.4 - Check the number of rows in the new table matches the individual yearly tables in the environment
 ```{r}
 candy_all_years %>% 
   group_by(year) %>% 
@@ -88,7 +88,7 @@ rm(candy_2015_clean, candy_2016_clean, candy_2017_clean)
 
 # 2 - Analysis questions set by CodeClan
 
-## 2.1 - What is the total number of candy ratings given across the three years. (number of candy ratings, not number of raters. Don’t count missing values)
+## 2.1 - What is the total number of candy ratings given across the three years? (Number of candy ratings, not number of raters. Don’t count missing values)
 
 I've already dropped NA ratings in  my cleaning process after the pivot_longer stage
 ```{r}
@@ -100,7 +100,6 @@ candy_all_years %>%
 
 ## 2.2 - What was the average age of people who are going out trick or treating and the average age of people not going trick or treating?
 
-I'm not sure if I need to do something about "NA" in the age field here
 ```{r}
 candy_all_years %>% 
   filter(!is.na(going_trick_or_treating)) %>%
@@ -136,7 +135,7 @@ This is one I'd like to come back to with a neater bit of code. Though I'm quite
 candy_all_years %>%
   filter(str_detect(candy_name, "[sS][tT][aA][rR]")) %>% 
   group_by(candy_name) %>% 
-  summarise(number_people_rated_as_despair = n())
+  summarise(number_of_rows = n())
 ```
 
 
@@ -206,7 +205,7 @@ candy_all_years %>%
 
 * Note that the 2015 raw data file didn't have a **country** column
 
-* I've excluded country NAs from this query - if I didn't, the whole of the 2015 dataset would all be dumped into the **4. All other countries** category
+* I've excluded country NAs from this query - if I didn't, the whole of the 2015 dataset would be dumped into the **4. All other countries** category
 
 ```{r}
 candy_all_years %>% 
